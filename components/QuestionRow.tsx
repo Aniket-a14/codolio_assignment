@@ -104,21 +104,21 @@ export function QuestionRow({ id, dragHandleProps, searchQuery = '' }: QuestionR
     };
 
     return (
-        <div className="group flex items-center py-3.5 px-4 hover:bg-[#111112] border-b border-[#27272a]/20 border-l-2 border-l-transparent hover:border-l-amber-600/60 transition-all duration-150 ease-out select-none relative bg-[#09090b]">
+        <div className="group flex items-center py-3 px-3 md:py-3.5 md:px-4 hover:bg-[#111112] border-b border-[#27272a]/20 border-l-2 border-l-transparent hover:border-l-amber-600/60 transition-all duration-150 ease-out select-none relative bg-[#09090b]">
             <button
                 onClick={toggleStatus}
                 className={cn(
-                    "mr-4 transition-all shrink-0 z-10",
+                    "mr-3 md:mr-4 transition-all shrink-0 z-10",
                     question.status === 'done' ? "text-emerald-500/80 hover:text-emerald-400" : "text-zinc-800 hover:text-zinc-600"
                 )}
             >
-                {question.status === 'done' ? <CheckCircle2 size={18} strokeWidth={2.5} /> : <Circle size={18} strokeWidth={2} />}
+                {question.status === 'done' ? <CheckCircle2 className="w-4 h-4 md:w-[18px] md:h-[18px]" strokeWidth={2.5} /> : <Circle className="w-4 h-4 md:w-[18px] md:h-[18px]" strokeWidth={2} />}
             </button>
 
             <div
                 {...dragHandleProps?.attributes}
                 {...dragHandleProps?.listeners}
-                className="mr-3 text-zinc-800 hover:text-zinc-600 cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 transition-opacity shrink-0 z-10"
+                className="hidden md:flex mr-3 text-zinc-800 hover:text-zinc-600 cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 transition-opacity shrink-0 z-10"
                 style={{ touchAction: 'none' }}
             >
                 <GripVertical size={13} strokeWidth={2} />
@@ -146,7 +146,7 @@ export function QuestionRow({ id, dragHandleProps, searchQuery = '' }: QuestionR
                             }}
                             onDoubleClick={(e) => { e.stopPropagation(); setIsEditing(true); }}
                             className={cn(
-                                "text-[15px] font-semibold tracking-tight cursor-pointer block truncate transition-colors",
+                                "text-sm md:text-[15px] font-semibold tracking-tight cursor-pointer block truncate transition-colors",
                                 question.status === 'done' ? "text-zinc-600/80 line-through decoration-zinc-800" : "text-zinc-200 group-hover:text-white"
                             )}
                         >
@@ -161,12 +161,12 @@ export function QuestionRow({ id, dragHandleProps, searchQuery = '' }: QuestionR
                 )}
             </div>
 
-            <div className="flex items-center gap-6 shrink-0 z-10">
+            <div className="flex items-center gap-3 md:gap-6 shrink-0 z-10">
 
-                <div className="flex items-center justify-end opacity-40 group-hover:opacity-100 transition-opacity min-w-[24px]">
+                <div className="hidden sm:flex items-center justify-end opacity-40 group-hover:opacity-100 transition-opacity min-w-[24px]">
                     <PlatformLogo platform={question.platform} className="w-4 h-4" />
                 </div>
-                <div className="w-20 flex justify-center">
+                <div className="hidden md:flex w-20 justify-center">
                     <span className={cn(
                         "text-[9px] font-black uppercase tracking-[0.1em] px-2.5 py-1 rounded-md",
                         question.difficulty === 'easy' ? "text-emerald-400 bg-emerald-400/10 border border-emerald-400/20" :
@@ -210,7 +210,7 @@ export function QuestionRow({ id, dragHandleProps, searchQuery = '' }: QuestionR
                     ))}
                 </div>
 
-                <div className="flex items-center gap-0.5 w-[70px] justify-end">
+                <div className="flex items-center gap-0.5 w-auto md:w-[70px] justify-end">
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
@@ -252,7 +252,7 @@ export function QuestionRow({ id, dragHandleProps, searchQuery = '' }: QuestionR
                                 }
                             });
                         }}
-                        className="p-2 text-zinc-700 hover:text-rose-500 transition-colors"
+                        className="hidden md:flex p-2 text-zinc-700 hover:text-rose-500 transition-colors"
                     >
                         <Trash2 size={15} strokeWidth={2} />
                     </button>

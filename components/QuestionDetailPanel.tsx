@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     X,
     Star,
@@ -99,6 +99,14 @@ export function QuestionDetailPanel() {
     const [isAddingTag, setIsAddingTag] = useState(false);
     const [sheetInput, setSheetInput] = useState('');
     const [isAddingSheet, setIsAddingSheet] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
 
     // Escape key to close panel
     React.useEffect(() => {
@@ -209,11 +217,11 @@ export function QuestionDetailPanel() {
                     />
 
                     <motion.div
-                        initial={{ x: "100%" }}
-                        animate={{ x: 0 }}
-                        exit={{ x: "100%" }}
+                        initial={isMobile ? { y: "100%", x: 0 } : { x: "100%", y: 0 }}
+                        animate={{ x: 0, y: 0 }}
+                        exit={isMobile ? { y: "100%", x: 0 } : { x: "100%", y: 0 }}
                         transition={{ type: "spring", damping: 30, stiffness: 300, mass: 0.8 }}
-                        className="fixed inset-y-0 right-0 w-[550px] bg-[#0c0c0e] border-l border-white/5 shadow-[0_0_50px_rgba(0,0,0,0.5)] z-50 flex flex-col"
+                        className="fixed inset-y-0 right-0 w-full md:w-[550px] bg-[#0c0c0e] border-l border-white/5 shadow-[0_0_50px_rgba(0,0,0,0.5)] z-50 flex flex-col rounded-t-[32px] md:rounded-t-none"
                     >
                         <div className="flex items-center justify-between px-6 py-4 border-b border-[#27272a]/50 bg-[#0c0c0e]">
                             <div className="flex items-center gap-3">
@@ -316,7 +324,7 @@ export function QuestionDetailPanel() {
                                             <section className="space-y-6">
                                                 <h2 className="text-xl font-black tracking-tight text-white mb-6">Question Details</h2>
                                                 <div className="space-y-6 text-sm">
-                                                    <div className="grid grid-cols-[140px_1fr] items-center">
+                                                    <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-center gap-2 sm:gap-4">
                                                         <span className="text-zinc-400 flex items-center gap-3 font-semibold">
                                                             <Move size={18} className="text-zinc-600" /> Location:
                                                         </span>
@@ -340,7 +348,7 @@ export function QuestionDetailPanel() {
                                                         </select>
                                                     </div>
 
-                                                    <div className="grid grid-cols-[140px_1fr] items-center">
+                                                    <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-center gap-2 sm:gap-4">
                                                         <span className="text-zinc-400 flex items-center gap-3 font-semibold">
                                                             <Monitor size={18} className="text-zinc-600" /> Difficulty:
                                                         </span>
@@ -359,7 +367,7 @@ export function QuestionDetailPanel() {
                                                         </select>
                                                     </div>
 
-                                                    <div className="grid grid-cols-[140px_1fr] items-center">
+                                                    <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-center gap-2 sm:gap-4">
                                                         <span className="text-zinc-400 flex items-center gap-3 font-semibold">
                                                             <Monitor size={18} className="text-zinc-600" /> Platform:
                                                         </span>
@@ -372,7 +380,7 @@ export function QuestionDetailPanel() {
                                                         />
                                                     </div>
 
-                                                    <div className="grid grid-cols-[140px_1fr] items-center">
+                                                    <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-center gap-2 sm:gap-4">
                                                         <span className="text-zinc-400 flex items-center gap-3 font-semibold">
                                                             <ExternalLink size={18} className="text-zinc-600" /> Question Link:
                                                         </span>
@@ -398,7 +406,7 @@ export function QuestionDetailPanel() {
                                                         </div>
                                                     </div>
 
-                                                    <div className="grid grid-cols-[140px_1fr] items-center">
+                                                    <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-center gap-2 sm:gap-4">
                                                         <span className="text-zinc-400 flex items-center gap-3 font-semibold">
                                                             <svg width="18" height="18" viewBox="0 0 24 24" className="fill-rose-600">
                                                                 <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z" />
@@ -426,7 +434,7 @@ export function QuestionDetailPanel() {
                                                         </div>
                                                     </div>
 
-                                                    <div className="grid grid-cols-[140px_1fr] items-start">
+                                                    <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-start gap-2 sm:gap-4">
                                                         <span className="text-zinc-400 flex items-center gap-3 font-semibold pt-1">
                                                             <List size={18} className="text-zinc-600" /> Topics:
                                                         </span>
@@ -439,7 +447,7 @@ export function QuestionDetailPanel() {
                                                         </div>
                                                     </div>
 
-                                                    <div className="grid grid-cols-[140px_1fr] items-start">
+                                                    <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-start gap-2 sm:gap-4">
                                                         <span className="text-zinc-400 flex items-center gap-3 font-semibold pt-1">
                                                             <Layers size={18} className="text-zinc-600" /> Popular Sheets:
                                                         </span>
@@ -459,7 +467,7 @@ export function QuestionDetailPanel() {
                                                     Custom Details
                                                 </h2>
                                                 <div className="space-y-8 text-sm">
-                                                    <div className="grid grid-cols-[140px_1fr] items-start">
+                                                    <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-start gap-2 sm:gap-4">
                                                         <span className="text-zinc-400 font-bold pt-1">Additional Tags :</span>
                                                         <div className="flex flex-wrap gap-2">
                                                             {question.customTags?.map(tag => (

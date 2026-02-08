@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import {
     DndContext,
     closestCenter,
@@ -27,7 +27,8 @@ import {
     Share2,
     Download,
     FileJson,
-    FileSpreadsheet
+    FileSpreadsheet,
+    Menu
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useStore } from '../store/useStore';
@@ -259,19 +260,31 @@ export default function Sheet() {
             <div className="absolute top-0 left-0 w-full h-[500px] bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(120,60,20,0.1),transparent)] pointer-events-none" />
             <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-zinc-800/50 to-transparent opacity-50" />
 
-            <div className="max-w-[1500px] mx-auto px-8 py-8 relative z-10">
-                <nav className="flex items-center gap-2.5 mb-8 text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-600">
-                    <span className="hover:text-zinc-300 cursor-pointer transition-colors duration-300">Home</span>
-                    <ChevronRight size={10} className="text-zinc-800" strokeWidth={3} />
-                    <span className="hover:text-zinc-300 cursor-pointer transition-colors duration-300">Explore</span>
-                    <ChevronRight size={10} className="text-zinc-800" strokeWidth={3} />
-                    <span className="text-amber-600/80">{sheetTitle}</span>
+            <div className="max-w-[1500px] mx-auto px-4 md:px-8 py-6 md:py-12 relative z-10">
+                <nav className="flex items-center justify-between md:justify-start gap-2.5 mb-8 text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-600">
+                    <div className="md:hidden">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => useStore.getState().setMobileNavOpen(true)}
+                            className="w-10 h-10 -ml-2 text-zinc-400 hover:text-white hover:bg-zinc-800/50 rounded-xl"
+                        >
+                            <Menu size={20} />
+                        </Button>
+                    </div>
+                    <div className="hidden md:flex items-center gap-2.5">
+                        <span className="hover:text-zinc-300 cursor-pointer transition-colors duration-300">Home</span>
+                        <ChevronRight size={10} className="text-zinc-800" strokeWidth={3} />
+                        <span className="hover:text-zinc-300 cursor-pointer transition-colors duration-300">Explore</span>
+                        <ChevronRight size={10} className="text-zinc-800" strokeWidth={3} />
+                    </div>
+                    <span className="text-amber-600/80 truncate">{sheetTitle}</span>
                 </nav>
 
-                <header className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-16 mb-20 items-stretch">
+                <header className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-12 lg:gap-20 mb-12 md:mb-20 items-stretch">
                     <div className="flex flex-col justify-center">
-                        <div className="flex flex-col gap-6 mb-8">
-                            <h1 className="text-[56px] font-extrabold tracking-tight text-white leading-[0.95] text-balance">
+                        <div className="flex flex-col gap-4 md:gap-6 mb-6 md:mb-8">
+                            <h1 className="text-4xl md:text-[56px] font-extrabold tracking-tight text-white leading-[1.1] md:leading-[0.95] text-balance">
                                 {sheetTitle}
                             </h1>
                             <div className="flex items-center gap-3">
@@ -287,7 +300,7 @@ export default function Sheet() {
                             {sheetDesc}
                         </p>
 
-                        <div className="flex items-center gap-5">
+                        <div className="flex flex-wrap items-center gap-3 md:gap-5">
                             <Button
                                 onClick={() => {
                                     const newState = !isFollowing;
@@ -319,14 +332,14 @@ export default function Sheet() {
                             </Button>
                             <Button
                                 onClick={handleCreateTopic}
-                                className="h-12 bg-amber-600 hover:bg-amber-500 text-white font-extrabold text-[12px] uppercase tracking-[0.2em] px-8 rounded-xl transition-all shadow-[0_0_20px_rgba(217,119,6,0.2)] active:scale-95"
+                                className="h-12 bg-amber-600 hover:bg-amber-500 text-white font-extrabold text-[12px] uppercase tracking-[0.2em] px-8 rounded-xl transition-all shadow-[0_0_20px_rgba(217,119,6,0.2)] active:scale-95 flex-1 md:flex-none"
                             >
                                 <Plus size={18} className="mr-2" strokeWidth={3} /> New Topic
                             </Button>
                         </div>
                     </div>
 
-                    <div className="glass-panel rounded-3xl p-8 flex flex-col items-center relative group/stats transition-all duration-500 hover:border-zinc-700/50 shadow-2xl shadow-black/50">
+                    <div className="hidden lg:flex glass-panel rounded-3xl p-8 flex-col items-center relative group/stats transition-all duration-500 hover:border-zinc-700/50 shadow-2xl shadow-black/50">
                         <div className="absolute top-5 right-5 flex items-center gap-2">
                             <button className="p-2.5 text-zinc-500 hover:text-zinc-200 transition-colors bg-zinc-800/30 rounded-lg hover:bg-zinc-800 border border-transparent hover:border-zinc-700">
                                 <Clock size={16} strokeWidth={2} />
@@ -419,8 +432,8 @@ export default function Sheet() {
                     </div>
                 </header>
 
-                <div className="flex items-center justify-between mb-12">
-                    <div className="flex items-center gap-10 border-b border-zinc-800/40 relative">
+                <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 md:mb-12 gap-6">
+                    <div className="flex items-center gap-6 md:gap-10 border-b border-zinc-800/40 relative overflow-x-auto scrollbar-hide no-scrollbar">
                         {['Problem List', 'Statistics', 'Discussion', 'Activity'].map((tab) => (
                             <button
                                 key={tab}
@@ -443,14 +456,14 @@ export default function Sheet() {
                     </div>
 
                     <div className="flex items-center gap-3 pb-2">
-                        <div className="relative group/search">
+                        <div className="relative group/search flex-1 md:flex-none">
                             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within/search:text-zinc-200 transition-colors" size={15} strokeWidth={2.5} />
                             <Input
                                 ref={searchInputRef}
                                 placeholder="Search questions..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="pl-11 pr-4 py-2 bg-zinc-900/50 border-zinc-800 text-zinc-200 text-xs font-semibold rounded-xl h-11 w-[280px] focus:bg-zinc-900 focus:border-zinc-700 transition-all placeholder:text-zinc-600 focus:ring-0 focus:w-[320px]"
+                                className="pl-11 pr-4 py-2 bg-zinc-900/50 border-zinc-800 text-zinc-200 text-xs font-semibold rounded-xl h-11 w-full md:w-[280px] focus:bg-zinc-900 focus:border-zinc-700 transition-all placeholder:text-zinc-600 focus:ring-0 md:focus:w-[320px]"
                             />
                         </div>
                         <FilterPopover filters={filters} onFilterChange={setFilters} />

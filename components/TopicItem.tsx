@@ -129,7 +129,7 @@ export function TopicItem({ id, dragHandleProps, searchQuery = '', filters = { s
         <div className="group flex flex-col w-full">
             <div
                 className={cn(
-                    "flex items-center justify-between py-2 pr-6 pl-4 cursor-pointer transition-all duration-200 ease-linear border-b border-t border-b-[#27272a]/40 border-t-[#27272a]/20 select-none group/row",
+                    "flex items-center justify-between py-2.5 pr-4 pl-3 md:pr-6 md:pl-4 cursor-pointer transition-all duration-200 ease-linear border-b border-t border-b-[#27272a]/40 border-t-[#27272a]/20 select-none group/row",
                     expandedState ? "bg-[#111112]" : "hover:bg-[#111112]"
                 )}
                 onClick={() => setIsExpanded(!isExpanded)}
@@ -138,7 +138,7 @@ export function TopicItem({ id, dragHandleProps, searchQuery = '', filters = { s
                     <div
                         {...dragHandleProps?.attributes}
                         {...dragHandleProps?.listeners}
-                        className="text-zinc-700 hover:text-zinc-500 cursor-grab active:cursor-grabbing opacity-0 group-hover/row:opacity-100 transition-opacity"
+                        className="hidden md:flex text-zinc-700 hover:text-zinc-500 cursor-grab active:cursor-grabbing md:opacity-0 group-hover/row:opacity-100 transition-opacity"
                         style={{ touchAction: 'none' }}
                         onClick={(e) => e.stopPropagation()}
                     >
@@ -159,7 +159,7 @@ export function TopicItem({ id, dragHandleProps, searchQuery = '', filters = { s
                         ) : (
                             <h2
                                 onDoubleClick={(e) => { e.stopPropagation(); setIsEditing(true); }}
-                                className="text-[18px] font-bold text-zinc-100 tracking-tight group-hover/row:text-white transition-colors"
+                                className="text-base md:text-[18px] font-bold text-zinc-100 tracking-tight group-hover/row:text-white transition-colors truncate max-w-[140px] xs:max-w-none"
                             >
                                 {topic.title}
                             </h2>
@@ -171,8 +171,8 @@ export function TopicItem({ id, dragHandleProps, searchQuery = '', filters = { s
                     </div>
                 </div>
 
-                <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-1 opacity-0 group-hover/row:opacity-100 transition-opacity">
+                <div className="flex items-center gap-2 md:gap-4">
+                    <div className="flex items-center gap-0.5 md:gap-1 opacity-60 md:opacity-0 group-hover/row:opacity-100 transition-opacity">
                         <button
                             onClick={handleAddQuestion}
                             className="p-1.5 text-zinc-700 hover:text-emerald-500 hover:bg-zinc-800/40 rounded-lg transition-all"

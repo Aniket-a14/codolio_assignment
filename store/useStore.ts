@@ -37,6 +37,8 @@ interface SheetActions {
     setActiveQuestion: (id: string | null) => void;
     renamingId: string | null;
     setRenamingId: (id: string | null) => void;
+    isMobileNavOpen: boolean;
+    setMobileNavOpen: (open: boolean) => void;
 
     // Import
     importData: (data: SheetState) => void;
@@ -50,6 +52,7 @@ export const useStore = create<SheetState & SheetActions>()(
             questions: { byId: {}, orderByParentId: {} },
             activeQuestionId: null,
             renamingId: null,
+            isMobileNavOpen: false,
 
             addTopic: (title) => {
                 const id = uuidv4();
@@ -318,6 +321,7 @@ export const useStore = create<SheetState & SheetActions>()(
             setActiveQuestion: (id) => set(() => ({ activeQuestionId: id })),
 
             setRenamingId: (id) => set(() => ({ renamingId: id })),
+            setMobileNavOpen: (open) => set(() => ({ isMobileNavOpen: open })),
 
             seedStore: () => {
                 get().initializeFromLocal();

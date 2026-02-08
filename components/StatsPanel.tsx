@@ -45,7 +45,7 @@ export function StatsPanel() {
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="relative overflow-hidden bg-gradient-to-br from-amber-500/10 via-zinc-900/90 to-zinc-950/90 border border-amber-500/20 rounded-3xl p-8 mb-6 backdrop-blur-sm"
+                className="relative overflow-hidden bg-gradient-to-br from-amber-500/10 via-zinc-900/90 to-zinc-950/90 border border-amber-500/20 rounded-3xl p-4 md:p-8 mb-6 backdrop-blur-sm"
             >
                 <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 via-transparent to-emerald-500/5 animate-pulse" />
 
@@ -68,7 +68,7 @@ export function StatsPanel() {
                         )}
                     </div>
 
-                    <div className="flex items-center justify-center gap-12 mb-8">
+                    <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-12 mb-8">
                         <div className="relative">
                             <svg className="w-56 h-56 transform -rotate-90">
                                 <circle
@@ -108,7 +108,7 @@ export function StatsPanel() {
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 w-full lg:w-auto">
                             <div className="bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 border border-emerald-500/20 rounded-2xl p-6">
                                 <div className="flex items-center gap-3 mb-2">
                                     <div className="p-2 bg-emerald-500/20 rounded-lg">
@@ -132,7 +132,7 @@ export function StatsPanel() {
                 </div>
             </motion.div>
 
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
