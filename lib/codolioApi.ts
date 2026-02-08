@@ -3,6 +3,12 @@ import { SheetState, EntityType } from '../types';
 
 const API_BASE_URL = 'https://node.codolio.com/api/question-tracker/v1/sheet/public/get-sheet-by-slug';
 
+interface PopularSheet {
+    _id: string;
+    name: string;
+    [key: string]: unknown;
+}
+
 interface RawSheetData {
     sheet: {
         name: string;
@@ -10,7 +16,7 @@ interface RawSheetData {
         banner: string;
         author: string;
         followers: number;
-        config: {
+        config?: {
             topicOrder: string[];
         };
     };
@@ -28,7 +34,7 @@ interface RawQuestion {
     isPublic?: boolean;
     hotness?: number;
     rank?: number;
-    popularSheets?: string[];
+    popularSheets?: (string | PopularSheet)[];
     questionId?: {
         id?: string | number;
         difficulty?: string;
@@ -45,7 +51,7 @@ interface RawQuestion {
 
 export const transformRawData = (data: RawSheetData): SheetState => {
     const { sheet, questions: rawQuestions } = data;
-    const topicOrderFromConfig = sheet.config.topicOrder || [];
+    const topicOrderFromConfig = sheet.config?.topicOrder || [];
 
     // Initialize State
     const state: SheetState = {
@@ -139,7 +145,7 @@ export const transformRawData = (data: RawSheetData): SheetState => {
             isPublic: q.isPublic,
             hotness: q.hotness,
             rank: q.rank,
-            popularSheets: q.popularSheets || []
+            popularSheets: q.popularSheets?.map((s) => typeof s === 'string' ? s : s.name) || []
         };
 
         state.questions.orderByParentId[parentId].push(qId);

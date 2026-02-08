@@ -98,34 +98,37 @@ export function SubTopicItem({ id, dragHandleProps, searchQuery = '', filters = 
         return matchesSearch && matchesStatus && matchesDifficulty;
     };
 
+    const isfiltering = searchQuery.length > 0 || filters.status.length > 0 || filters.difficulty.length > 0;
     const cleanQuestionIds = questionIds.filter(matchesFilter);
 
     // If filtering is active and no content matches, hide this sub-topic
-    if ((searchQuery || filters.status.length > 0 || filters.difficulty.length > 0) && cleanQuestionIds.length === 0) {
+    if (isfiltering && cleanQuestionIds.length === 0) {
         return null;
     }
 
-    const isfiltering = searchQuery.length > 0 || filters.status.length > 0 || filters.difficulty.length > 0;
     const expandedState = isfiltering ? true : isExpanded;
 
     return (
-        <div className="flex flex-col w-full bg-[#09090b]">
+        <div className="flex flex-col w-full bg-[#0c0c0e]/50">
             <div
-                className="flex items-center justify-between py-1.5 pr-6 pl-12 group/sub cursor-pointer hover:bg-[#111112] transition-all duration-200 ease-linear select-none border-b border-[#27272a]/20"
+                className={cn(
+                    "flex items-center justify-between py-2 pr-6 pl-12 group/sub cursor-pointer transition-all duration-200 ease-linear select-none border-y border-[#27272a]/10",
+                    expandedState ? "bg-[#161618]/30" : "hover:bg-[#111112]"
+                )}
                 onClick={() => setIsExpanded(!isExpanded)}
             >
                 <div className="flex items-center gap-4">
                     <ChevronRight
                         size={12}
                         strokeWidth={2}
-                        className={cn("text-zinc-700 transition-transform duration-200 ease-linear", expandedState && "rotate-90 text-zinc-500")}
+                        className={cn("text-zinc-700 transition-transform duration-200 ease-linear", expandedState && "rotate-90 text-amber-500/70")}
                     />
 
                     <div className="flex items-center gap-4">
                         {isEditing ? (
                             <input
                                 autoFocus
-                                className="bg-transparent border-none focus:ring-0 text-[16px] font-semibold text-zinc-200 p-0"
+                                className="bg-transparent border-none focus:ring-0 text-[15px] font-bold text-zinc-100 p-0"
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
                                 onBlur={handleSave}
@@ -136,16 +139,16 @@ export function SubTopicItem({ id, dragHandleProps, searchQuery = '', filters = 
                             <span
                                 onDoubleClick={(e) => { e.stopPropagation(); setIsEditing(true); }}
                                 className={cn(
-                                    "text-[16px] font-semibold tracking-tight transition-colors",
-                                    expandedState ? "text-zinc-200" : "text-zinc-500 group-hover/sub:text-zinc-400"
+                                    "text-[15px] font-bold tracking-tight transition-colors uppercase tracking-[0.05em]",
+                                    expandedState ? "text-zinc-100" : "text-zinc-500 group-hover/sub:text-zinc-300"
                                 )}
                             >
                                 {subTopic.title}
                             </span>
                         )}
-                        <div className="flex items-center gap-1.5 px-1.5 py-px bg-zinc-900/30 rounded border border-zinc-800/40">
-                            <span className="text-[9px] font-semibold text-zinc-600 tabular-nums tracking-wide">{doneCount}</span>
-                            <span className="text-[9px] font-medium text-zinc-700 uppercase tracking-wide">/ {questionIds.length}</span>
+                        <div className="flex items-center gap-1.5 px-2 py-px bg-zinc-900/40 rounded border border-zinc-800/50">
+                            <span className="text-[10px] font-bold text-zinc-500 tabular-nums tracking-wide">{doneCount}</span>
+                            <span className="text-[10px] font-medium text-zinc-700 uppercase tracking-wide">/ {questionIds.length}</span>
                         </div>
                     </div>
                 </div>
@@ -186,7 +189,7 @@ export function SubTopicItem({ id, dragHandleProps, searchQuery = '', filters = 
                         transition={{ duration: 0.25, ease: "easeInOut" }}
                         className="overflow-hidden"
                     >
-                        <div className="pl-4 py-1">
+                        <div className="pl-6 py-1 border-l border-[#27272a]/20 ml-12 mb-2">
                             <SortableContext items={cleanQuestionIds} strategy={verticalListSortingStrategy}>
                                 {cleanQuestionIds.map(qId => (
                                     <SortableItem key={qId} id={qId}>

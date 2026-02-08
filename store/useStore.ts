@@ -329,7 +329,7 @@ export const useStore = create<SheetState & SheetActions>()(
 
             initializeFromLocal: async () => {
                 const { transformRawData } = await import('../lib/codolioApi');
-                const rawData = await import('../codolio_data.json');
+                const rawData = await import('../sheet.json');
 
                 if (rawData && rawData.data) {
                     const transformed = transformRawData(rawData.data);

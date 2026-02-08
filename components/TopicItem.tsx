@@ -108,8 +108,10 @@ export function TopicItem({ id, dragHandleProps, searchQuery = '', filters = { s
         return matchesSearch && matchesStatus && matchesDifficulty;
     };
 
+    const isFilteringActive = searchQuery.length > 0 || filters.status.length > 0 || filters.difficulty.length > 0;
     const cleanDirectQuestionIds = directQuestionIds.filter(matchesFilter);
     const cleanSubTopicIds = subTopicIds.filter(stId => {
+        if (!isFilteringActive) return true; // Show all sections if not filtering
         const questions = orderByParent[stId] || [];
         return questions.some(matchesFilter);
     });
@@ -122,8 +124,7 @@ export function TopicItem({ id, dragHandleProps, searchQuery = '', filters = { s
     }
 
     // Auto-expand if filtering
-    const isfiltering = searchQuery.length > 0 || filters.status.length > 0 || filters.difficulty.length > 0;
-    const expandedState = isfiltering ? true : isExpanded;
+    const expandedState = isFilteringActive ? true : isExpanded;
 
     return (
         <div className="group flex flex-col w-full">
