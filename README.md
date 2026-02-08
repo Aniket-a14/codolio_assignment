@@ -551,7 +551,6 @@ NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
 
 ### CI/CD
 - `.github/workflows/ci.yml` - Automated testing and linting
-- `.github/workflows/deploy.yml` - Production deployment
 - `.github/workflows/code-quality.yml` - Security audits
 - `.github/dependabot.yml` - Dependency updates
 

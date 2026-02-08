@@ -26,57 +26,6 @@ This guide covers deploying the Striver's SDE Sheet Tracker to production using 
 
 5. Click **"Deploy"**
 
-### 2. Get Vercel Credentials
-
-You need three secrets for GitHub Actions:
-
-#### VERCEL_TOKEN
-1. Go to [Vercel Account Settings → Tokens](https://vercel.com/account/tokens)
-2. Click **"Create Token"**
-3. Name it `GitHub Actions`
-4. Set expiration (recommended: No Expiration for CI/CD)
-5. Copy the token
-
-#### VERCEL_ORG_ID
-1. Go to [Vercel Dashboard](https://vercel.com/dashboard)
-2. Click on your profile/organization
-3. Go to **Settings → General**
-4. Copy the **Organization ID** (or Team ID)
-
-#### VERCEL_PROJECT_ID
-1. Go to your project in Vercel
-2. Click **Settings**
-3. Scroll to **Project ID**
-4. Copy the ID
-
-### 3. Add GitHub Secrets
-
-1. Go to your GitHub repository
-2. Navigate to **Settings → Secrets and variables → Actions**
-3. Click **"New repository secret"**
-4. Add the following secrets:
-
-| Secret Name | Value |
-|------------|-------|
-| `VERCEL_TOKEN` | Your Vercel token |
-| `VERCEL_ORG_ID` | Your organization/team ID |
-| `VERCEL_PROJECT_ID` | Your project ID |
-
----
-
-## Automated Deployment
-
-Once secrets are configured, deployments happen automatically:
-
-### Main Branch (Production)
-- **Trigger**: Push to `main` branch
-- **Workflow**: `.github/workflows/deploy.yml`
-- **Environment**: Production
-- **URL**: Your Vercel production URL
-
-### Pull Requests (Preview)
-Vercel automatically creates preview deployments for PRs via their GitHub integration.
-
 ---
 
 ## Manual Deployment
@@ -102,13 +51,6 @@ Vercel automatically creates preview deployments for PRs via their GitHub integr
    ```bash
    vercel
    ```
-
-### Using GitHub Actions Manually
-
-1. Go to **Actions** tab in GitHub
-2. Select **"Deploy to Production"** workflow
-3. Click **"Run workflow"**
-4. Select branch and click **"Run workflow"**
 
 ---
 
