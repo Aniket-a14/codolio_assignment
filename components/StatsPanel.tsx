@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { useStore } from '../store/useStore';
-import { cn } from '../lib/utils';
 import { TrendingUp, Award, Target, Zap, Trophy, Flame } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -43,13 +42,11 @@ export function StatsPanel() {
 
     return (
         <div className="max-w-6xl mx-auto">
-            {/* Hero Stats Card */}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="relative overflow-hidden bg-gradient-to-br from-amber-500/10 via-zinc-900/90 to-zinc-950/90 border border-amber-500/20 rounded-3xl p-8 mb-6 backdrop-blur-sm"
             >
-                {/* Animated background gradient */}
                 <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 via-transparent to-emerald-500/5 animate-pulse" />
 
                 <div className="relative z-10">
@@ -71,11 +68,9 @@ export function StatsPanel() {
                         )}
                     </div>
 
-                    {/* Main Progress Circle */}
                     <div className="flex items-center justify-center gap-12 mb-8">
                         <div className="relative">
                             <svg className="w-56 h-56 transform -rotate-90">
-                                {/* Background circle */}
                                 <circle
                                     cx="112"
                                     cy="112"
@@ -85,7 +80,6 @@ export function StatsPanel() {
                                     fill="transparent"
                                     className="text-zinc-800/50"
                                 />
-                                {/* Progress circle */}
                                 <motion.circle
                                     cx="112"
                                     cy="112"
@@ -114,7 +108,6 @@ export function StatsPanel() {
                             </div>
                         </div>
 
-                        {/* Stats Grid */}
                         <div className="grid grid-cols-2 gap-6">
                             <div className="bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 border border-emerald-500/20 rounded-2xl p-6">
                                 <div className="flex items-center gap-3 mb-2">
@@ -139,9 +132,7 @@ export function StatsPanel() {
                 </div>
             </motion.div>
 
-            {/* Difficulty & Platform Grid */}
             <div className="grid grid-cols-2 gap-6">
-                {/* Difficulty Breakdown */}
                 <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -156,7 +147,6 @@ export function StatsPanel() {
                     </div>
 
                     <div className="space-y-5">
-                        {/* Easy */}
                         <div>
                             <div className="flex items-center justify-between mb-2">
                                 <span className="text-sm font-bold text-emerald-400">Easy</span>
@@ -171,7 +161,6 @@ export function StatsPanel() {
                                 />
                             </div>
                         </div>
-                        {/* Medium */}
                         <div>
                             <div className="flex items-center justify-between mb-2">
                                 <span className="text-sm font-bold text-amber-500">Medium</span>
@@ -186,7 +175,6 @@ export function StatsPanel() {
                                 />
                             </div>
                         </div>
-                        {/* Hard */}
                         <div>
                             <div className="flex items-center justify-between mb-2">
                                 <span className="text-sm font-bold text-rose-500">Hard</span>
@@ -204,7 +192,6 @@ export function StatsPanel() {
                     </div>
                 </motion.div>
 
-                {/* Platform Distribution */}
                 <motion.div
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}

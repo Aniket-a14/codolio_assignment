@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { ChevronRight, GripVertical, Plus, ChevronDown, Trash2, FilePlus, FolderPlus } from 'lucide-react';
+import { ChevronRight, GripVertical, Trash2, FilePlus, FolderPlus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { toast } from 'sonner';
@@ -12,15 +12,16 @@ import { SubTopicItem } from './SubTopicItem';
 import { cn } from '../lib/utils';
 import { EMPTY_ARRAY } from '../lib/constants';
 
+import { SortableHandleProps, SortableChildrenProps } from '../types/dnd';
+
 interface TopicItemProps {
     id: string;
-    dragHandleProps?: any;
+    dragHandleProps?: SortableHandleProps;
     searchQuery?: string;
     filters?: { status: string[], difficulty: string[] };
-    filterActive?: boolean;
 }
 
-export function TopicItem({ id, dragHandleProps, filterActive, searchQuery = '', filters = { status: [], difficulty: [] } }: TopicItemProps) {
+export function TopicItem({ id, dragHandleProps, searchQuery = '', filters = { status: [], difficulty: [] } }: TopicItemProps) {
     const topic = useStore((state) => state.topics.byId[id]);
     const subTopicIds = useStore((state) => state.subTopics.orderByTopicId[id] || EMPTY_ARRAY);
     const directQuestionIds = useStore((state) => state.questions.orderByParentId[id] || EMPTY_ARRAY);
@@ -41,8 +42,12 @@ export function TopicItem({ id, dragHandleProps, filterActive, searchQuery = '',
 
     useEffect(() => {
         if (renamingId === id) {
-            setIsEditing(true);
-            setRenamingId(null);
+            // Delay to avoid sync render cycle warning
+            const timer = setTimeout(() => {
+                setIsEditing(true);
+                setRenamingId(null);
+            }, 0);
+            return () => clearTimeout(timer);
         }
     }, [renamingId, id, setRenamingId]);
 
@@ -58,14 +63,14 @@ export function TopicItem({ id, dragHandleProps, filterActive, searchQuery = '',
 
     const handleAddSubTopic = (e: React.MouseEvent) => {
         e.stopPropagation();
-        const newId = addSubTopic(id, 'New Section');
+        addSubTopic(id, 'New Section');
         setIsExpanded(true);
         toast.success("Section Added", { description: "New sub-topic created." });
     };
 
     const handleAddQuestion = (e: React.MouseEvent) => {
         e.stopPropagation();
-        const newId = addQuestion(id, 'topic', 'New Question');
+        addQuestion(id, 'topic', 'New Question');
         setIsExpanded(true);
         toast.success("Question Added", { description: "New question created in topic." });
     };
@@ -122,7 +127,6 @@ export function TopicItem({ id, dragHandleProps, filterActive, searchQuery = '',
 
     return (
         <div className="group flex flex-col w-full">
-            {/* Header / Bar */}
             <div
                 className={cn(
                     "flex items-center justify-between py-2 pr-6 pl-4 cursor-pointer transition-all duration-200 ease-linear border-b border-t border-b-[#27272a]/40 border-t-[#27272a]/20 select-none group/row",
@@ -200,7 +204,6 @@ export function TopicItem({ id, dragHandleProps, filterActive, searchQuery = '',
                 </div>
             </div>
 
-            {/* Content / Expansion */}
             <AnimatePresence>
                 {expandedState && (
                     <motion.div
@@ -211,14 +214,13 @@ export function TopicItem({ id, dragHandleProps, filterActive, searchQuery = '',
                         className="bg-[#09090b]"
                     >
                         <div className="py-2 flex flex-col gap-2">
-                            {/* Direct Questions in Topic */}
                             {cleanDirectQuestionIds.length > 0 && (
                                 <div className="border-b border-[#1a1a1b]/30">
                                     <SortableContext items={cleanDirectQuestionIds} strategy={verticalListSortingStrategy}>
                                         {cleanDirectQuestionIds.map(qId => (
                                             <SortableItem key={qId} id={qId}>
-                                                {({ attributes, listeners }: any) => (
-                                                    <QuestionRow id={qId} dragHandleProps={{ ...attributes, ...listeners }} searchQuery={searchQuery} />
+                                                {({ attributes, listeners }: SortableChildrenProps) => (
+                                                    <QuestionRow id={qId} dragHandleProps={{ attributes, listeners }} searchQuery={searchQuery} />
                                                 )}
                                             </SortableItem>
                                         ))}
@@ -226,14 +228,13 @@ export function TopicItem({ id, dragHandleProps, filterActive, searchQuery = '',
                                 </div>
                             )}
 
-                            {/* Sub-topics */}
                             <SortableContext items={cleanSubTopicIds} strategy={verticalListSortingStrategy}>
                                 {cleanSubTopicIds.map(stId => (
                                     <SortableItem key={stId} id={stId}>
-                                        {({ attributes, listeners }: any) => (
+                                        {({ attributes, listeners }: SortableChildrenProps) => (
                                             <SubTopicItem
                                                 id={stId}
-                                                dragHandleProps={{ ...attributes, ...listeners }}
+                                                dragHandleProps={{ attributes, listeners }}
                                                 searchQuery={searchQuery}
                                                 filters={filters}
                                             />

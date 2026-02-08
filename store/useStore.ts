@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { v4 as uuidv4 } from 'uuid';
-import { SheetState, Topic, SubTopic, Question, EntityType } from '../types';
+import { SheetState, Question, EntityType } from '../types';
 
 interface SheetActions {
     // Topic Actions
@@ -71,7 +71,8 @@ export const useStore = create<SheetState & SheetActions>()(
             })),
 
             deleteTopic: (id) => set((state) => {
-                const { [id]: _, ...remainingTopicsById } = state.topics.byId;
+                const remainingTopicsById = { ...state.topics.byId };
+                delete remainingTopicsById[id];
 
                 // Cascade delete Sub-topics
                 const subTopicIdsToRemove = state.subTopics.orderByTopicId[id] || [];
@@ -151,7 +152,8 @@ export const useStore = create<SheetState & SheetActions>()(
                 const subTopic = state.subTopics.byId[id];
                 if (!subTopic) return state;
 
-                const { [id]: _, ...remainingSubTopicsById } = state.subTopics.byId;
+                const remainingSubTopicsById = { ...state.subTopics.byId };
+                delete remainingSubTopicsById[id];
                 const topicId = subTopic.topicId;
 
                 // Remove from topic's order
@@ -229,7 +231,8 @@ export const useStore = create<SheetState & SheetActions>()(
                 const question = state.questions.byId[id];
                 if (!question) return state;
 
-                const { [id]: _, ...remainingQBId } = state.questions.byId;
+                const remainingQBId = { ...state.questions.byId };
+                delete remainingQBId[id];
                 const parentId = question.parentId;
 
                 return {
@@ -320,9 +323,9 @@ export const useStore = create<SheetState & SheetActions>()(
                 get().initializeFromLocal();
             },
 
-            initializeFromLocal: () => {
-                const { transformRawData } = require('../lib/codolioApi');
-                const rawData = require('../codolio_data.json');
+            initializeFromLocal: async () => {
+                const { transformRawData } = await import('../lib/codolioApi');
+                const rawData = await import('../codolio_data.json');
 
                 if (rawData && rawData.data) {
                     const transformed = transformRawData(rawData.data);

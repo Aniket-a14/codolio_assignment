@@ -9,9 +9,6 @@ import {
     CheckCircle2,
     Circle,
     Copy,
-    Share2,
-    Save,
-    Map,
     Plus,
     Move,
     Trash2,
@@ -203,7 +200,6 @@ export function QuestionDetailPanel() {
         <AnimatePresence>
             {activeQuestionId && question && (
                 <>
-                    {/* Backdrop */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -212,7 +208,6 @@ export function QuestionDetailPanel() {
                         className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
                     />
 
-                    {/* Panel */}
                     <motion.div
                         initial={{ x: "100%" }}
                         animate={{ x: 0 }}
@@ -220,7 +215,6 @@ export function QuestionDetailPanel() {
                         transition={{ type: "spring", damping: 30, stiffness: 300, mass: 0.8 }}
                         className="fixed inset-y-0 right-0 w-[550px] bg-[#0c0c0e] border-l border-white/5 shadow-[0_0_50px_rgba(0,0,0,0.5)] z-50 flex flex-col"
                     >
-                        {/* Modal Header */}
                         <div className="flex items-center justify-between px-6 py-4 border-b border-[#27272a]/50 bg-[#0c0c0e]">
                             <div className="flex items-center gap-3">
                                 <button
@@ -248,11 +242,8 @@ export function QuestionDetailPanel() {
                             </div>
                         </div>
 
-                        {/* Content Scroll Area */}
                         <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar">
                             <div className="px-8 py-8">
-
-                                {/* Title Bar */}
                                 <div className="flex items-center justify-between mb-8 group">
                                     <div className="flex items-center gap-3 min-w-0 flex-1">
                                         <button
@@ -288,7 +279,6 @@ export function QuestionDetailPanel() {
                                     </div>
                                 </div>
 
-                                {/* Tabs */}
                                 <div className="flex items-center gap-6 border-b border-[#27272a] mb-10">
                                     <button
                                         onClick={() => setActiveTab('overview')}
@@ -316,7 +306,6 @@ export function QuestionDetailPanel() {
                                     </button>
                                 </div>
 
-                                {/* Tab Content */}
                                 <div className="min-h-[400px]">
                                     {activeTab === 'overview' ? (
                                         <motion.div
@@ -324,11 +313,9 @@ export function QuestionDetailPanel() {
                                             animate={{ opacity: 1, y: 0 }}
                                             className="space-y-12"
                                         >
-                                            {/* Question Details Section */}
                                             <section className="space-y-6">
                                                 <h2 className="text-xl font-black tracking-tight text-white mb-6">Question Details</h2>
                                                 <div className="space-y-6 text-sm">
-                                                    {/* Parent / Location */}
                                                     <div className="grid grid-cols-[140px_1fr] items-center">
                                                         <span className="text-zinc-400 flex items-center gap-3 font-semibold">
                                                             <Move size={18} className="text-zinc-600" /> Location:
@@ -353,7 +340,6 @@ export function QuestionDetailPanel() {
                                                         </select>
                                                     </div>
 
-                                                    {/* Difficulty */}
                                                     <div className="grid grid-cols-[140px_1fr] items-center">
                                                         <span className="text-zinc-400 flex items-center gap-3 font-semibold">
                                                             <Monitor size={18} className="text-zinc-600" /> Difficulty:
@@ -373,7 +359,6 @@ export function QuestionDetailPanel() {
                                                         </select>
                                                     </div>
 
-                                                    {/* Platform */}
                                                     <div className="grid grid-cols-[140px_1fr] items-center">
                                                         <span className="text-zinc-400 flex items-center gap-3 font-semibold">
                                                             <Monitor size={18} className="text-zinc-600" /> Platform:
@@ -387,7 +372,6 @@ export function QuestionDetailPanel() {
                                                         />
                                                     </div>
 
-                                                    {/* Question Link */}
                                                     <div className="grid grid-cols-[140px_1fr] items-center">
                                                         <span className="text-zinc-400 flex items-center gap-3 font-semibold">
                                                             <ExternalLink size={18} className="text-zinc-600" /> Question Link:
@@ -414,7 +398,6 @@ export function QuestionDetailPanel() {
                                                         </div>
                                                     </div>
 
-                                                    {/* YouTube Video URL */}
                                                     <div className="grid grid-cols-[140px_1fr] items-center">
                                                         <span className="text-zinc-400 flex items-center gap-3 font-semibold">
                                                             <svg width="18" height="18" viewBox="0 0 24 24" className="fill-rose-600">
@@ -443,7 +426,6 @@ export function QuestionDetailPanel() {
                                                         </div>
                                                     </div>
 
-                                                    {/* Topics */}
                                                     <div className="grid grid-cols-[140px_1fr] items-start">
                                                         <span className="text-zinc-400 flex items-center gap-3 font-semibold pt-1">
                                                             <List size={18} className="text-zinc-600" /> Topics:
@@ -457,7 +439,6 @@ export function QuestionDetailPanel() {
                                                         </div>
                                                     </div>
 
-                                                    {/* Popular Sheets */}
                                                     <div className="grid grid-cols-[140px_1fr] items-start">
                                                         <span className="text-zinc-400 flex items-center gap-3 font-semibold pt-1">
                                                             <Layers size={18} className="text-zinc-600" /> Popular Sheets:
@@ -473,7 +454,6 @@ export function QuestionDetailPanel() {
                                                 </div>
                                             </section>
 
-                                            {/* Custom Details Section */}
                                             <section className="space-y-6">
                                                 <h2 className="text-xl font-black tracking-tight text-white border-t border-[#27272a]/40 pt-10 mb-6 flex items-center gap-3">
                                                     Custom Details
@@ -564,12 +544,11 @@ export function QuestionDetailPanel() {
                                                 </div>
                                             </section>
 
-                                            {/* Alternate Questions (Similar) */}
                                             <section className="space-y-6 pt-10 border-t border-[#27272a]/40">
                                                 <h2 className="text-xl font-black tracking-tight text-white mb-6">Alternate Questions</h2>
                                                 <div className="space-y-3">
                                                     {question.similarQuestions && question.similarQuestions.length > 0 ? (
-                                                        question.similarQuestions.map((qId, index) => {
+                                                        question.similarQuestions.map((qId) => {
                                                             const similarQ = allQuestions[qId];
                                                             if (!similarQ) return null;
 

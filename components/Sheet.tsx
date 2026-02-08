@@ -11,27 +11,25 @@ import {
     DragEndEvent
 } from '@dnd-kit/core';
 import { toast } from "sonner"
+import { SortableChildrenProps } from '../types/dnd';
+
 import {
-    arrayMove,
     SortableContext,
     sortableKeyboardCoordinates,
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import {
-    Plus,
+    ChevronRight,
     Search,
-    Filter,
+    Plus,
     Clock,
     Share2,
-    ChevronRight,
-    MoreHorizontal,
-    Star,
-    ExternalLink,
-    Loader2
+    Download,
+    FileJson,
+    FileSpreadsheet
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useStore } from '../store/useStore';
-import { fetchAndTransformSheet } from '../lib/codolioApi';
 import { TopicItem } from './TopicItem';
 import { SortableItem } from './SortableItem';
 import { EntityType } from '../types';
@@ -42,9 +40,7 @@ import { Input } from './ui/input';
 import { QuestionDetailPanel } from './QuestionDetailPanel';
 import { FilterPopover } from './FilterPopover';
 import { exportToJSON, exportToCSV } from '../lib/exportUtils';
-import { Download, FileJson, FileSpreadsheet } from 'lucide-react';
 import { StatsPanel } from './StatsPanel';
-import { div } from 'framer-motion/client';
 
 export default function Sheet() {
     const questions = useStore((state) => state.questions);
@@ -54,8 +50,7 @@ export default function Sheet() {
         reorderEntity,
         subTopics,
         seedStore,
-        clearData,
-        importData
+        clearData
     } = useStore();
 
     const metadata = useStore((state) => state.metadata);
@@ -78,7 +73,6 @@ export default function Sheet() {
 
     const [isFollowing, setIsFollowing] = React.useState(false);
     const [activeTab, setActiveTab] = React.useState('Problem List');
-    const [isImporting, setIsImporting] = React.useState(false);
     const initialized = React.useRef(false);
 
     const [searchQuery, setSearchQuery] = React.useState('');
@@ -107,7 +101,7 @@ export default function Sheet() {
             // Ctrl+N: New Topic
             if (e.ctrlKey && e.key === 'n') {
                 e.preventDefault();
-                const newId = addTopic('New Topic');
+                addTopic('New Topic');
                 toast.success('Topic Created', { description: 'New topic added.' });
             }
             // Ctrl+K: Focus Search
@@ -155,7 +149,7 @@ export default function Sheet() {
         // A simple approach is to return ALL topics, but pass the filter props.
 
         return topics;
-    }, [topics, isFiltering, searchQuery, filters]);
+    }, [topics, isFiltering]);
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
@@ -233,7 +227,7 @@ export default function Sheet() {
     };
 
     const handleCreateTopic = () => {
-        const id = addTopic("New Topic");
+        addTopic("New Topic");
         toast.success("Topic Created", {
             description: "New topic added to your sheet.",
             action: {
@@ -247,12 +241,10 @@ export default function Sheet() {
 
     return (
         <div className="bg-[#09090b] min-h-screen relative selection:bg-amber-500/20 overflow-x-hidden">
-            {/* Ambient Background Glow */}
             <div className="absolute top-0 left-0 w-full h-[500px] bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(120,60,20,0.1),transparent)] pointer-events-none" />
             <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-zinc-800/50 to-transparent opacity-50" />
 
             <div className="max-w-[1500px] mx-auto px-8 py-8 relative z-10">
-                {/* Breadcrumbs */}
                 <nav className="flex items-center gap-2.5 mb-8 text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-600">
                     <span className="hover:text-zinc-300 cursor-pointer transition-colors duration-300">Home</span>
                     <ChevronRight size={10} className="text-zinc-800" strokeWidth={3} />
@@ -320,13 +312,10 @@ export default function Sheet() {
                     </div>
 
                     <div className="glass-panel rounded-3xl p-8 flex flex-col items-center relative group/stats transition-all duration-500 hover:border-zinc-700/50 shadow-2xl shadow-black/50">
-                        {/* Utility Bar */}
                         <div className="absolute top-5 right-5 flex items-center gap-2">
                             <button className="p-2.5 text-zinc-500 hover:text-zinc-200 transition-colors bg-zinc-800/30 rounded-lg hover:bg-zinc-800 border border-transparent hover:border-zinc-700">
                                 <Clock size={16} strokeWidth={2} />
                             </button>
-
-                            {/* Export Menu */}
                             <div className="relative">
                                 <button
                                     onClick={() => setShowExportMenu(!showExportMenu)}
@@ -369,7 +358,6 @@ export default function Sheet() {
                             </button>
                         </div>
 
-                        {/* Large Progress Circle */}
                         <div className="relative w-48 h-48 mb-8 mt-4">
                             <svg className="w-full h-full transform -rotate-90 drop-shadow-2xl">
                                 <circle
@@ -402,7 +390,6 @@ export default function Sheet() {
                             </div>
                         </div>
 
-                        {/* Detailed Stats */}
                         <div className="flex items-center justify-between w-full px-8 pt-6 border-t border-zinc-800/50">
                             <div className="flex flex-col items-start gap-1">
                                 <span className="text-3xl font-bold text-white tabular-nums tracking-tight">{doneCount}</span>
@@ -455,7 +442,6 @@ export default function Sheet() {
                     </div>
                 </div>
 
-                {/* Conditional Content Based on Active Tab */}
                 {activeTab === 'Statistics' ? (
                     <div className="mb-6">
                         <StatsPanel />
@@ -470,11 +456,10 @@ export default function Sheet() {
                             <SortableContext items={filteredTopics.order} strategy={verticalListSortingStrategy}>
                                 {filteredTopics.order.map((id) => (
                                     <SortableItem key={id} id={id}>
-                                        {({ attributes, listeners }: any) => (
+                                        {({ attributes, listeners }: SortableChildrenProps) => (
                                             <TopicItem
                                                 id={id}
-                                                dragHandleProps={{ ...attributes, ...listeners }}
-                                                filterActive={isFiltering}
+                                                dragHandleProps={{ attributes, listeners }}
                                                 searchQuery={searchQuery}
                                                 filters={filters}
                                             />
@@ -517,7 +502,6 @@ export default function Sheet() {
                     </p>
                 </footer>
             </div>
-            {/* Question Detail Panel (Global Overlay) */}
             <QuestionDetailPanel />
         </div >
     );

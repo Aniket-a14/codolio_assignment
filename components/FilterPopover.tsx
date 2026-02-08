@@ -4,7 +4,7 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover"
 import { Button } from "@/components/ui/button"
-import { Filter, Check } from "lucide-react"
+import { Filter } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
@@ -96,8 +96,8 @@ export function FilterPopover({ filters, onFilterChange }: FilterPopoverProps) {
                                 <div key={diff} className="flex items-center space-x-2">
                                     <Checkbox
                                         id={`diff-${diff}`}
-                                        checked={filters.difficulty.includes(diff as any)}
-                                        onCheckedChange={() => toggleDifficulty(diff as any)}
+                                        checked={filters.difficulty.includes(diff as "easy" | "medium" | "hard")}
+                                        onCheckedChange={() => toggleDifficulty(diff as "easy" | "medium" | "hard")}
                                         className={cn(
                                             "border-zinc-700",
                                             diff === 'easy' && "data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500",

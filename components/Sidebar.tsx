@@ -7,7 +7,6 @@ import {
     FileText,
     Calendar,
     Award,
-    Clock,
     Settings,
     LayoutGrid
 } from 'lucide-react';

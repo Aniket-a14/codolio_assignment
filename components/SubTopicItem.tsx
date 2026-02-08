@@ -11,9 +11,11 @@ import { QuestionRow } from './QuestionRow';
 import { cn } from '../lib/utils';
 import { EMPTY_ARRAY } from '../lib/constants';
 
+import { SortableHandleProps, SortableChildrenProps } from '../types/dnd';
+
 interface SubTopicItemProps {
     id: string;
-    dragHandleProps?: any;
+    dragHandleProps?: SortableHandleProps;
     searchQuery?: string;
     filters?: { status: string[], difficulty: string[] };
 }
@@ -31,10 +33,17 @@ export function SubTopicItem({ id, dragHandleProps, searchQuery = '', filters = 
     const [isEditing, setIsEditing] = useState(false);
     const [title, setTitle] = useState(subTopic?.title || '');
 
+    // Filter Logic
+    const allQuestionsMap = useStore((state) => state.questions.byId);
+
     useEffect(() => {
         if (renamingId === id) {
-            setIsEditing(true);
-            setRenamingId(null);
+            // Delay to avoid sync render cycle warning
+            const timer = setTimeout(() => {
+                setIsEditing(true);
+                setRenamingId(null);
+            }, 0);
+            return () => clearTimeout(timer);
         }
     }, [renamingId, id, setRenamingId]);
 
@@ -50,7 +59,7 @@ export function SubTopicItem({ id, dragHandleProps, searchQuery = '', filters = 
 
     const handleAddQuestion = (e: React.MouseEvent) => {
         e.stopPropagation();
-        const newId = addQuestion(id, 'subTopic', 'New Question');
+        addQuestion(id, 'subTopic', 'New Question');
         setIsExpanded(true);
         toast.success("Question Added", { description: "New question added to section." });
     };
@@ -71,8 +80,6 @@ export function SubTopicItem({ id, dragHandleProps, searchQuery = '', filters = 
 
     const doneCount = questionIds.filter(qId => useStore.getState().questions.byId[qId]?.status === 'done').length;
 
-    // Filter Logic
-    const allQuestionsMap = useStore((state) => state.questions.byId);
     const matchesFilter = (qId: string) => {
         const q = allQuestionsMap[qId];
         if (!q) return false;
@@ -103,7 +110,6 @@ export function SubTopicItem({ id, dragHandleProps, searchQuery = '', filters = 
 
     return (
         <div className="flex flex-col w-full bg-[#09090b]">
-            {/* Sub-topic Header Bar */}
             <div
                 className="flex items-center justify-between py-1.5 pr-6 pl-12 group/sub cursor-pointer hover:bg-[#111112] transition-all duration-200 ease-linear select-none border-b border-[#27272a]/20"
                 onClick={() => setIsExpanded(!isExpanded)}
@@ -168,8 +174,7 @@ export function SubTopicItem({ id, dragHandleProps, searchQuery = '', filters = 
                     </button>
                 </div>
             </div>
-
-            {/* Questions List */}
+            
             <AnimatePresence>
                 {expandedState && (
                     <motion.div
@@ -183,8 +188,8 @@ export function SubTopicItem({ id, dragHandleProps, searchQuery = '', filters = 
                             <SortableContext items={cleanQuestionIds} strategy={verticalListSortingStrategy}>
                                 {cleanQuestionIds.map(qId => (
                                     <SortableItem key={qId} id={qId}>
-                                        {({ attributes, listeners }: any) => (
-                                            <QuestionRow id={qId} dragHandleProps={{ ...attributes, ...listeners }} searchQuery={searchQuery} />
+                                        {({ attributes, listeners }: SortableChildrenProps) => (
+                                            <QuestionRow id={qId} dragHandleProps={{ attributes, listeners }} searchQuery={searchQuery} />
                                         )}
                                     </SortableItem>
                                 ))}

@@ -3,7 +3,47 @@ import { SheetState, EntityType } from '../types';
 
 const API_BASE_URL = 'https://node.codolio.com/api/question-tracker/v1/sheet/public/get-sheet-by-slug';
 
-export const transformRawData = (data: any): SheetState => {
+interface RawSheetData {
+    sheet: {
+        name: string;
+        description: string;
+        banner: string;
+        author: string;
+        followers: number;
+        config: {
+            topicOrder: string[];
+        };
+    };
+    questions: RawQuestion[];
+}
+
+interface RawQuestion {
+    _id?: string;
+    title: string;
+    topic: string;
+    subTopic?: string | null;
+    isSolved: boolean;
+    resource?: string | null;
+    session?: string;
+    isPublic?: boolean;
+    hotness?: number;
+    rank?: number;
+    popularSheets?: string[];
+    questionId?: {
+        id?: string | number;
+        difficulty?: string;
+        problemUrl?: string;
+        topics?: string[];
+        platform?: string;
+        verified?: boolean;
+        slug?: string;
+        description?: string;
+        companyTags?: string[];
+        similarQuestions?: string[];
+    };
+}
+
+export const transformRawData = (data: RawSheetData): SheetState => {
     const { sheet, questions: rawQuestions } = data;
     const topicOrderFromConfig = sheet.config.topicOrder || [];
 
@@ -25,7 +65,7 @@ export const transformRawData = (data: any): SheetState => {
     const topicMap = new Map<string, string>(); // Name -> UUID
 
     // 1. Create Topics from Config Order to preserve order
-    topicOrderFromConfig.forEach((topicName: string) => {
+    topicOrderFromConfig.forEach((topicName) => {
         if (!topicMap.has(topicName)) {
             const tId = uuidv4();
             topicMap.set(topicName, tId);
@@ -40,7 +80,7 @@ export const transformRawData = (data: any): SheetState => {
     const subTopicMap = new Map<string, string>(); // "TopicName:SubTopicName" -> UUID
 
     // 2. Process Questions
-    rawQuestions.forEach((q: any) => {
+    rawQuestions.forEach((q) => {
         const topicName = q.topic;
         const subTopicName = q.subTopic;
 
@@ -82,14 +122,14 @@ export const transformRawData = (data: any): SheetState => {
             parentId,
             parentType: parentType as 'topic' | 'subTopic',
             status: q.isSolved ? 'done' : 'todo',
-            difficulty: ['easy', 'medium', 'hard'].includes(difficulty) ? difficulty : undefined,
-            videoUrl: q.resource,
+            difficulty: (['easy', 'medium', 'hard'].includes(difficulty || '') ? difficulty : undefined) as 'easy' | 'medium' | 'hard' | undefined,
+            videoUrl: q.resource || undefined,
             link: q.questionId?.problemUrl,
             tags: q.questionId?.topics || [],
             notes: '',
             bookmarked: false,
             platform: q.questionId?.platform,
-            platformId: q.questionId?.id,
+            platformId: q.questionId?.id ? String(q.questionId.id) : undefined,
             verified: q.questionId?.verified,
             slug: q.questionId?.slug,
             description: q.questionId?.description,

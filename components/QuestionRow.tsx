@@ -15,9 +15,11 @@ import { useStore } from '../store/useStore';
 import { cn } from '../lib/utils';
 import { HighlightText } from './HighlightText';
 
+import { SortableHandleProps } from '../types/dnd';
+
 interface QuestionRowProps {
     id: string;
-    dragHandleProps?: any;
+    dragHandleProps?: SortableHandleProps;
     searchQuery?: string;
 }
 
@@ -103,7 +105,6 @@ export function QuestionRow({ id, dragHandleProps, searchQuery = '' }: QuestionR
 
     return (
         <div className="group flex items-center py-3.5 px-4 hover:bg-[#111112] border-b border-[#27272a]/20 border-l-2 border-l-transparent hover:border-l-amber-600/60 transition-all duration-150 ease-out select-none relative bg-[#09090b]">
-            {/* 1. Status Indicator */}
             <button
                 onClick={toggleStatus}
                 className={cn(
@@ -121,7 +122,6 @@ export function QuestionRow({ id, dragHandleProps, searchQuery = '' }: QuestionR
                 <GripVertical size={13} strokeWidth={2} />
             </div>
 
-            {/* 2. Question Title & Verified Badge */}
             <div className="flex-1 min-w-0 mr-6 z-10 flex items-center gap-2">
                 {isEditing ? (
                     <input
@@ -154,15 +154,11 @@ export function QuestionRow({ id, dragHandleProps, searchQuery = '' }: QuestionR
                 )}
             </div>
 
-            {/* Metadata Alignment Grid */}
             <div className="flex items-center gap-6 shrink-0 z-10">
 
-                {/* 3. Platform Logo */}
                 <div className="flex items-center justify-end opacity-40 group-hover:opacity-100 transition-opacity min-w-[24px]">
                     <PlatformLogo platform={question.platform} className="w-4 h-4" />
                 </div>
-
-                {/* 4. Difficulty Badge - Refined styling */}
                 <div className="w-20 flex justify-center">
                     <span className={cn(
                         "text-[9px] font-black uppercase tracking-[0.1em] px-2.5 py-1 rounded-md",
@@ -174,7 +170,6 @@ export function QuestionRow({ id, dragHandleProps, searchQuery = '' }: QuestionR
                     </span>
                 </div>
 
-                {/* 5. YouTube Icon - Refined with branding colors */}
                 <div className="flex justify-center shrink-0 min-w-[32px]">
                     {question.videoUrl ? (
                         <a
@@ -200,7 +195,6 @@ export function QuestionRow({ id, dragHandleProps, searchQuery = '' }: QuestionR
                     )}
                 </div>
 
-                {/* 6. Tag Pills - Polished */}
                 <div className="hidden lg:flex items-center gap-1.5 w-[100px] justify-start overflow-hidden">
                     {(question.tags || []).slice(0, 1).map((tag, idx) => (
                         <span key={idx} className="px-2 py-0.5 border border-zinc-800/80 text-zinc-500 text-[9px] font-bold rounded text-zinc-400/60 uppercase tracking-tighter whitespace-nowrap bg-zinc-900/50">
@@ -209,7 +203,6 @@ export function QuestionRow({ id, dragHandleProps, searchQuery = '' }: QuestionR
                     ))}
                 </div>
 
-                {/* 7. Actions - Sleeker placement */}
                 <div className="flex items-center gap-0.5 w-[70px] justify-end">
                     <button
                         onClick={(e) => {
