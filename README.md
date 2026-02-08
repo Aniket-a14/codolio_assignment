@@ -5,6 +5,8 @@ A **premium, production-ready** progress tracker for Striver's SDE Sheet with ad
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Next.js](https://img.shields.io/badge/Next.js-14-black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)
+![CI](https://github.com/Aniket-a14/codolio_assignment/workflows/CI/badge.svg)
+![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)
 
 ---
 
@@ -107,6 +109,61 @@ A **premium, production-ready** progress tracker for Striver's SDE Sheet with ad
 ```bash
 npm run build
 npm start
+```
+
+---
+
+## 🐳 Docker Quick Start
+
+### Using Docker (Production)
+
+1. **Build the Docker image**
+   ```bash
+   docker build -t codolio-assignment:latest .
+   ```
+
+2. **Run the container**
+   ```bash
+   docker run -p 3000:3000 codolio-assignment:latest
+   ```
+
+3. **Open in browser**
+   Navigate to [http://localhost:3000](http://localhost:3000)
+
+### Using Docker Compose (Development)
+
+1. **Start the development environment**
+   ```bash
+   docker-compose up
+   ```
+
+2. **Run in background**
+   ```bash
+   docker-compose up -d
+   ```
+
+3. **View logs**
+   ```bash
+   docker-compose logs -f
+   ```
+
+4. **Stop services**
+   ```bash
+   docker-compose down
+   ```
+
+> **Note**: Docker Compose mounts your source code for hot-reload during development.
+
+### Environment Variables (Optional)
+
+Currently, no environment variables are required. For future extensibility, create a `.env.local` file:
+
+```env
+# Optional: Custom API endpoint
+NEXT_PUBLIC_API_URL=https://api.example.com
+
+# Optional: Analytics
+NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
 ```
 
 ---
@@ -469,12 +526,36 @@ graph LR
 ## 🔧 Configuration
 
 ### Environment Variables
-No environment variables required for basic functionality.
+
+**No environment variables are required** for basic functionality. The application works out of the box with:
+- Local storage for data persistence
+- Static data from `codolio_data.json`
+- Client-side operations only
+
+Optional environment variables for future features:
+```env
+NEXT_PUBLIC_API_URL=https://api.example.com
+NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
+```
 
 ### Customization
 - Edit `tailwind.config.ts` for theme customization
 - Modify `store/useStore.ts` for state structure changes
 - Update `lib/constants.ts` for default values
+
+### Docker Configuration
+- `Dockerfile` - Multi-stage production build (~150MB)
+- `Dockerfile.dev` - Development with hot-reload
+- `docker-compose.yml` - Local development orchestration
+- `.dockerignore` - Excludes unnecessary files
+
+### CI/CD
+- `.github/workflows/ci.yml` - Automated testing and linting
+- `.github/workflows/deploy.yml` - Production deployment
+- `.github/workflows/code-quality.yml` - Security audits
+- `.github/dependabot.yml` - Dependency updates
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed deployment instructions.
 
 ---
 
@@ -535,6 +616,37 @@ MIT License - feel free to use this project for learning and personal use.
 - **Codolio** for the API integration
 - **shadcn/ui** for beautiful components
 - **Vercel** for Next.js framework
+
+---
+
+## 🚀 Deployment
+
+### Vercel (Recommended)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone)
+
+1. Click the button above or connect your GitHub repository
+2. Configure environment variables (if any)
+3. Deploy automatically on every push to `main`
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions.
+
+### Docker Deployment
+
+**Production:**
+```bash
+docker build -t codolio-assignment:latest .
+docker run -p 3000:3000 codolio-assignment:latest
+```
+
+**Development:**
+```bash
+docker-compose up
+```
+
+### Other Platforms
+- **Netlify**: Works with Next.js adapter
+- **AWS**: Use Amplify or EC2 with Docker
+- **DigitalOcean**: App Platform or Droplet with Docker
 
 ---
 
