@@ -221,38 +221,42 @@ export function QuestionDetailPanel() {
                         animate={{ x: 0, y: 0 }}
                         exit={isMobile ? { y: "100%", x: 0 } : { x: "100%", y: 0 }}
                         transition={{ type: "spring", damping: 30, stiffness: 300, mass: 0.8 }}
-                        className="fixed inset-y-0 right-0 w-full md:w-[550px] bg-[#0c0c0e] border-l border-white/5 shadow-[0_0_50px_rgba(0,0,0,0.5)] z-50 flex flex-col rounded-t-[32px] md:rounded-t-none"
+                        className="fixed inset-y-0 right-0 w-full md:w-[550px] bg-[#0c0c0e] border-l border-white/5 shadow-[0_0_50px_rgba(0,0,0,0.5)] z-50 flex flex-col rounded-t-[32px] md:rounded-t-none overflow-hidden"
                     >
-                        <div className="flex items-center justify-between px-6 py-4 border-b border-[#27272a]/50 bg-[#0c0c0e]">
-                            <div className="flex items-center gap-3">
-                                <button
-                                    onClick={() => setActiveQuestion(null)}
-                                    className="p-1 hover:bg-zinc-800 rounded-md transition-colors text-zinc-400"
-                                >
-                                    <X size={20} />
-                                </button>
-                                <span className="text-lg font-bold text-zinc-100">Add Question</span>
+                        <div className="flex flex-col h-full overflow-hidden">
+                            <div className="shrink-0 px-6 py-4 border-b border-[#27272a]/50 bg-[#0c0c0e]">
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-3">
+                                        <button
+                                            onClick={() => setActiveQuestion(null)}
+                                            className="p-1 hover:bg-zinc-800 rounded-md transition-colors text-zinc-400"
+                                        >
+                                            <X size={20} />
+                                        </button>
+                                        <span className="text-lg font-bold text-zinc-100">
+                                            {question.id.startsWith('temp') ? 'Add Question' : 'Question Detail'}
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <button
+                                            onClick={handleDelete}
+                                            className="p-1 hover:bg-rose-950/30 rounded-md transition-colors text-zinc-500 hover:text-rose-500 mr-2"
+                                            title="Delete Question"
+                                        >
+                                            <Trash2 size={18} />
+                                        </button>
+                                        <button
+                                            onClick={() => setActiveQuestion(null)}
+                                            className="px-5 py-2 bg-amber-600 hover:bg-amber-500 text-white text-sm font-bold rounded-md transition-colors shadow-lg active:scale-95"
+                                        >
+                                            Save
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="flex items-center">
-                                <button
-                                    onClick={handleDelete}
-                                    className="p-1 hover:bg-rose-950/30 rounded-md transition-colors text-zinc-500 hover:text-rose-500 mr-2"
-                                    title="Delete Question"
-                                >
-                                    <Trash2 size={18} />
-                                </button>
-                                <button
-                                    onClick={() => setActiveQuestion(null)}
-                                    className="px-5 py-2 bg-amber-600 hover:bg-amber-500 text-white text-sm font-bold rounded-md transition-colors shadow-lg active:scale-95"
-                                >
-                                    Save
-                                </button>
-                            </div>
-                        </div>
 
-                        <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar">
-                            <div className="px-8 py-8">
-                                <div className="flex items-center justify-between mb-8 group">
+                            <div className="shrink-0 px-8 pt-6 pb-2 bg-[#0c0c0e]">
+                                <div className="flex items-center justify-between mb-6 group">
                                     <div className="flex items-center gap-3 min-w-0 flex-1">
                                         <button
                                             onClick={toggleStatus}
@@ -287,7 +291,7 @@ export function QuestionDetailPanel() {
                                     </div>
                                 </div>
 
-                                <div className="flex items-center gap-6 border-b border-[#27272a] mb-10">
+                                <div className="flex items-center gap-6 border-b border-[#27272a]">
                                     <button
                                         onClick={() => setActiveTab('overview')}
                                         className={cn(
@@ -313,314 +317,315 @@ export function QuestionDetailPanel() {
                                         <span>Notes</span>
                                     </button>
                                 </div>
+                            </div>
 
-                                <div className="min-h-[400px]">
-                                    {activeTab === 'overview' ? (
-                                        <motion.div
-                                            initial={{ opacity: 0, y: 10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            className="space-y-12"
-                                        >
-                                            <section className="space-y-6">
-                                                <h2 className="text-xl font-black tracking-tight text-white mb-6">Question Details</h2>
-                                                <div className="space-y-6 text-sm">
-                                                    <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-center gap-2 sm:gap-4">
-                                                        <span className="text-zinc-400 flex items-center gap-3 font-semibold">
-                                                            <Move size={18} className="text-zinc-600" /> Location:
-                                                        </span>
-                                                        <select
-                                                            value={question.parentId}
-                                                            onChange={(e) => handleMove(e.target.value)}
-                                                            className="bg-[#1a1a1b] border border-[#27272a] rounded-md text-xs font-bold text-zinc-300 p-2 focus:ring-1 focus:ring-amber-500/50 outline-none"
-                                                        >
-                                                            <optgroup label="Topics">
-                                                                {topics.order.map(tId => (
-                                                                    <option key={tId} value={tId}>{topics.byId[tId]?.title}</option>
-                                                                ))}
-                                                            </optgroup>
-                                                            <optgroup label="Sections">
-                                                                {Object.values(subTopics.byId).map(st => (
-                                                                    <option key={st.id} value={st.id}>
-                                                                        {topics.byId[st.topicId]?.title} &rarr; {st.title}
-                                                                    </option>
-                                                                ))}
-                                                            </optgroup>
-                                                        </select>
-                                                    </div>
+                            <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar px-8 py-6">
 
-                                                    <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-center gap-2 sm:gap-4">
-                                                        <span className="text-zinc-400 flex items-center gap-3 font-semibold">
-                                                            <Monitor size={18} className="text-zinc-600" /> Difficulty:
-                                                        </span>
-                                                        <select
-                                                            value={question.difficulty || 'medium'}
-                                                            onChange={(e) => editQuestion(question.id, { difficulty: e.target.value as 'easy' | 'medium' | 'hard' })}
-                                                            className={cn(
-                                                                "bg-[#1a1a1b] border border-[#27272a] rounded-md text-sm font-bold p-2 focus:ring-1 focus:ring-amber-500/50 outline-none",
-                                                                question.difficulty === 'easy' ? "text-emerald-400" :
-                                                                    question.difficulty === 'medium' ? "text-amber-500" : "text-rose-500"
-                                                            )}
-                                                        >
-                                                            <option value="easy" className="text-emerald-400">Easy</option>
-                                                            <option value="medium" className="text-amber-500">Medium</option>
-                                                            <option value="hard" className="text-rose-500">Hard</option>
-                                                        </select>
-                                                    </div>
+                                {activeTab === 'overview' ? (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        className="space-y-8"
+                                    >
+                                        <section className="space-y-4">
+                                            <h2 className="text-xl font-black tracking-tight text-white mb-4">Question Details</h2>
+                                            <div className="space-y-4 text-sm">
+                                                <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-start gap-2 sm:gap-4">
+                                                    <span className="text-zinc-400 flex items-center gap-3 font-semibold pt-2">
+                                                        <Move size={18} className="text-zinc-600" /> Location:
+                                                    </span>
+                                                    <select
+                                                        value={question.parentId}
+                                                        onChange={(e) => handleMove(e.target.value)}
+                                                        className="bg-[#1a1a1b] border border-[#27272a] rounded-md text-xs font-bold text-zinc-300 px-4 py-2.5 focus:ring-1 focus:ring-amber-500/50 outline-none max-w-[325px]"
+                                                    >
+                                                        <optgroup label="Topics">
+                                                            {topics.order.map(tId => (
+                                                                <option key={tId} value={tId}>{topics.byId[tId]?.title}</option>
+                                                            ))}
+                                                        </optgroup>
+                                                        <optgroup label="Sections">
+                                                            {Object.values(subTopics.byId).map(st => (
+                                                                <option key={st.id} value={st.id}>
+                                                                    {topics.byId[st.topicId]?.title} &rarr; {st.title}
+                                                                </option>
+                                                            ))}
+                                                        </optgroup>
+                                                    </select>
+                                                </div>
 
-                                                    <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-center gap-2 sm:gap-4">
-                                                        <span className="text-zinc-400 flex items-center gap-3 font-semibold">
-                                                            <Monitor size={18} className="text-zinc-600" /> Platform:
-                                                        </span>
+                                                <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-start gap-2 sm:gap-4">
+                                                    <span className="text-zinc-400 flex items-center gap-3 font-semibold pt-2">
+                                                        <Monitor size={18} className="text-zinc-600" /> Difficulty:
+                                                    </span>
+                                                    <select
+                                                        value={question.difficulty || 'medium'}
+                                                        onChange={(e) => editQuestion(question.id, { difficulty: e.target.value as 'easy' | 'medium' | 'hard' })}
+                                                        className={cn(
+                                                            "bg-[#1a1a1b] border border-[#27272a] rounded-md text-sm font-bold px-4 py-2.5 focus:ring-1 focus:ring-amber-500/50 outline-none max-w-md",
+                                                            question.difficulty === 'easy' ? "text-emerald-400" :
+                                                                question.difficulty === 'medium' ? "text-amber-500" : "text-rose-500"
+                                                        )}
+                                                    >
+                                                        <option value="easy" className="text-emerald-400">Easy</option>
+                                                        <option value="medium" className="text-amber-500">Medium</option>
+                                                        <option value="hard" className="text-rose-500">Hard</option>
+                                                    </select>
+                                                </div>
+
+                                                <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-start gap-2 sm:gap-4">
+                                                    <span className="text-zinc-400 flex items-center gap-3 font-semibold pt-2">
+                                                        <Monitor size={18} className="text-zinc-600" /> Platform:
+                                                    </span>
+                                                    <input
+                                                        type="text"
+                                                        value={question.platform || ''}
+                                                        onChange={(e) => editQuestion(question.id, { platform: e.target.value })}
+                                                        placeholder="LeetCode, GeeksforGeeks, etc."
+                                                        className="bg-[#1a1a1b] border border-[#27272a] rounded-md text-xs font-medium text-zinc-300 px-4 py-2.5 focus:ring-1 focus:ring-amber-500/50 outline-none placeholder:text-zinc-700 max-w-md"
+                                                    />
+                                                </div>
+
+                                                <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-start gap-2 sm:gap-4">
+                                                    <span className="text-zinc-400 flex items-center gap-3 font-semibold pt-2">
+                                                        <ExternalLink size={18} className="text-zinc-600" /> Question Link:
+                                                    </span>
+                                                    <div className="flex items-center gap-2 max-w-md">
                                                         <input
-                                                            type="text"
-                                                            value={question.platform || ''}
-                                                            onChange={(e) => editQuestion(question.id, { platform: e.target.value })}
-                                                            placeholder="LeetCode, GeeksforGeeks, etc."
-                                                            className="bg-[#1a1a1b] border border-[#27272a] rounded-md text-xs font-medium text-zinc-300 px-3 py-2 focus:ring-1 focus:ring-amber-500/50 outline-none placeholder:text-zinc-700"
+                                                            type="url"
+                                                            value={question.link || ''}
+                                                            onChange={(e) => editQuestion(question.id, { link: e.target.value })}
+                                                            placeholder="https://leetcode.com/problems/..."
+                                                            className="bg-[#1a1a1b] border border-[#27272a] rounded-md text-xs font-medium text-zinc-300 px-4 py-2.5 focus:ring-1 focus:ring-amber-500/50 outline-none placeholder:text-zinc-700 flex-1"
                                                         />
-                                                    </div>
-
-                                                    <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-center gap-2 sm:gap-4">
-                                                        <span className="text-zinc-400 flex items-center gap-3 font-semibold">
-                                                            <ExternalLink size={18} className="text-zinc-600" /> Question Link:
-                                                        </span>
-                                                        <div className="flex items-center gap-2">
-                                                            <input
-                                                                type="url"
-                                                                value={question.link || ''}
-                                                                onChange={(e) => editQuestion(question.id, { link: e.target.value })}
-                                                                placeholder="https://leetcode.com/problems/..."
-                                                                className="bg-[#1a1a1b] border border-[#27272a] rounded-md text-xs font-medium text-zinc-300 px-3 py-2 focus:ring-1 focus:ring-amber-500/50 outline-none placeholder:text-zinc-700 flex-1"
-                                                            />
-                                                            {question.link && (
-                                                                <a
-                                                                    href={question.link}
-                                                                    target="_blank"
-                                                                    rel="noopener noreferrer"
-                                                                    className="p-2 text-blue-400 hover:text-blue-300 hover:bg-blue-950/30 rounded-md transition-colors border border-transparent hover:border-blue-900/30"
-                                                                    title="Open question link"
-                                                                >
-                                                                    <ExternalLink size={16} />
-                                                                </a>
-                                                            )}
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-center gap-2 sm:gap-4">
-                                                        <span className="text-zinc-400 flex items-center gap-3 font-semibold">
-                                                            <svg width="18" height="18" viewBox="0 0 24 24" className="fill-rose-600">
-                                                                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z" />
-                                                            </svg> Video URL:
-                                                        </span>
-                                                        <div className="flex items-center gap-2">
-                                                            <input
-                                                                type="url"
-                                                                value={question.videoUrl || ''}
-                                                                onChange={(e) => editQuestion(question.id, { videoUrl: e.target.value })}
-                                                                placeholder="https://youtube.com/watch?v=..."
-                                                                className="bg-[#1a1a1b] border border-[#27272a] rounded-md text-xs font-medium text-zinc-300 px-3 py-2 focus:ring-1 focus:ring-amber-500/50 outline-none placeholder:text-zinc-700 flex-1"
-                                                            />
-                                                            {question.videoUrl && (
-                                                                <a
-                                                                    href={question.videoUrl}
-                                                                    target="_blank"
-                                                                    rel="noopener noreferrer"
-                                                                    className="p-2 text-rose-400 hover:text-rose-300 hover:bg-rose-950/30 rounded-md transition-colors border border-transparent hover:border-rose-900/30"
-                                                                    title="Watch video"
-                                                                >
-                                                                    <ExternalLink size={16} />
-                                                                </a>
-                                                            )}
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-start gap-2 sm:gap-4">
-                                                        <span className="text-zinc-400 flex items-center gap-3 font-semibold pt-1">
-                                                            <List size={18} className="text-zinc-600" /> Topics:
-                                                        </span>
-                                                        <div className="flex flex-wrap gap-2">
-                                                            {(question.tags && question.tags.length > 0 ? question.tags : ['Arrays', 'Hashing']).map(tag => (
-                                                                <span key={tag} className="px-3 py-1.5 bg-[#1a1a1b] border border-[#27272a] rounded-md text-xs font-bold text-zinc-400 hover:border-zinc-700 transition-colors">
-                                                                    {tag}
-                                                                </span>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-start gap-2 sm:gap-4">
-                                                        <span className="text-zinc-400 flex items-center gap-3 font-semibold pt-1">
-                                                            <Layers size={18} className="text-zinc-600" /> Popular Sheets:
-                                                        </span>
-                                                        <div className="flex flex-wrap gap-2">
-                                                            {(question.popularSheets && question.popularSheets.length > 0 ? question.popularSheets : ["Striver's SDE Sheet", "Neetcode 150", "Blind 75"]).map(sheet => (
-                                                                <span key={sheet} className="px-3 py-1.5 bg-[#1a1a1b] border border-[#27272a] rounded-md text-xs font-bold text-zinc-400 hover:border-zinc-700 transition-colors">
-                                                                    {sheet}
-                                                                </span>
-                                                            ))}
-                                                        </div>
+                                                        {question.link && (
+                                                            <a
+                                                                href={question.link}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="p-2 text-blue-400 hover:text-blue-300 hover:bg-blue-950/30 rounded-md transition-colors border border-transparent hover:border-blue-900/30"
+                                                                title="Open question link"
+                                                            >
+                                                                <ExternalLink size={16} />
+                                                            </a>
+                                                        )}
                                                     </div>
                                                 </div>
-                                            </section>
 
-                                            <section className="space-y-6">
-                                                <h2 className="text-xl font-black tracking-tight text-white border-t border-[#27272a]/40 pt-10 mb-6 flex items-center gap-3">
-                                                    Custom Details
-                                                </h2>
-                                                <div className="space-y-8 text-sm">
-                                                    <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-start gap-2 sm:gap-4">
-                                                        <span className="text-zinc-400 font-bold pt-1">Additional Tags :</span>
-                                                        <div className="flex flex-wrap gap-2">
-                                                            {question.customTags?.map(tag => (
-                                                                <span key={tag} className="flex items-center gap-1.5 px-3 py-1 bg-amber-500/10 border border-amber-500/20 rounded-md text-xs font-bold text-amber-400 group/tag">
-                                                                    {tag}
-                                                                    <button
-                                                                        onClick={() => handleRemoveTag(tag)}
-                                                                        className="hover:text-rose-500 transition-colors opacity-0 group-hover/tag:opacity-100"
-                                                                    >
-                                                                        <X size={12} />
-                                                                    </button>
-                                                                </span>
-                                                            ))}
-                                                            {isAddingTag ? (
-                                                                <div className="flex items-center gap-2">
-                                                                    <input
-                                                                        autoFocus
-                                                                        className="bg-[#1a1a1b] border border-amber-500/50 rounded-md text-[11px] font-bold text-zinc-100 px-2 py-1 focus:ring-1 focus:ring-amber-500 outline-none w-24"
-                                                                        value={tagInput}
-                                                                        onChange={(e) => setTagInput(e.target.value)}
-                                                                        onKeyDown={(e) => e.key === 'Enter' && handleAddTag()}
-                                                                        onBlur={() => !tagInput && setIsAddingTag(false)}
-                                                                    />
-                                                                    <button onClick={handleAddTag} className="text-emerald-500 hover:text-emerald-400">
-                                                                        <CheckCircle2 size={16} />
-                                                                    </button>
-                                                                    <button onClick={() => setIsAddingTag(false)} className="text-zinc-600 hover:text-zinc-400">
-                                                                        <X size={16} />
-                                                                    </button>
-                                                                </div>
-                                                            ) : (
-                                                                <button
-                                                                    onClick={() => setIsAddingTag(true)}
-                                                                    className="flex items-center gap-1.5 px-3 py-1 bg-[#1a1a1b] border border-[#27272a] rounded-md text-xs font-bold text-zinc-500 hover:text-zinc-300 hover:border-zinc-700 transition-all border-dashed"
-                                                                >
-                                                                    <Plus size={12} /> Add Tag
-                                                                </button>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                    <div className="grid grid-cols-[140px_1fr] items-start">
-                                                        <span className="text-zinc-400 font-bold pt-1">Custom Sheets :</span>
-                                                        <div className="flex flex-wrap gap-2">
-                                                            {question.customSheets?.map(sheet => (
-                                                                <span key={sheet} className="flex items-center gap-1.5 px-3 py-1 bg-indigo-500/10 border border-indigo-500/20 rounded-md text-xs font-bold text-indigo-400 group/sheet">
-                                                                    {sheet}
-                                                                    <button
-                                                                        onClick={() => handleRemoveSheet(sheet)}
-                                                                        className="hover:text-rose-500 transition-colors opacity-0 group-hover/sheet:opacity-100"
-                                                                    >
-                                                                        <X size={12} />
-                                                                    </button>
-                                                                </span>
-                                                            ))}
-                                                            {isAddingSheet ? (
-                                                                <div className="flex items-center gap-2">
-                                                                    <input
-                                                                        autoFocus
-                                                                        className="bg-[#1a1a1b] border border-indigo-500/50 rounded-md text-[11px] font-bold text-zinc-100 px-2 py-1 focus:ring-1 focus:ring-indigo-500 outline-none w-32"
-                                                                        value={sheetInput}
-                                                                        onChange={(e) => setSheetInput(e.target.value)}
-                                                                        onKeyDown={(e) => e.key === 'Enter' && handleAddSheet()}
-                                                                        onBlur={() => !sheetInput && setIsAddingSheet(false)}
-                                                                    />
-                                                                    <button onClick={handleAddSheet} className="text-emerald-500 hover:text-emerald-400">
-                                                                        <CheckCircle2 size={16} />
-                                                                    </button>
-                                                                    <button onClick={() => setIsAddingSheet(false)} className="text-zinc-600 hover:text-zinc-400">
-                                                                        <X size={16} />
-                                                                    </button>
-                                                                </div>
-                                                            ) : (
-                                                                <button
-                                                                    onClick={() => setIsAddingSheet(true)}
-                                                                    className="flex items-center gap-1.5 px-3 py-1 bg-[#1a1a1b] border border-[#27272a] rounded-md text-xs font-bold text-zinc-500 hover:text-zinc-300 hover:border-zinc-700 transition-all border-dashed"
-                                                                >
-                                                                    <Plus size={12} /> Add to Sheet
-                                                                </button>
-                                                            )}
-                                                        </div>
+                                                <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-start gap-2 sm:gap-4">
+                                                    <span className="text-zinc-400 flex items-center gap-3 font-semibold pt-2">
+                                                        <svg width="18" height="18" viewBox="0 0 24 24" className="fill-rose-600">
+                                                            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z" />
+                                                        </svg> Video URL:
+                                                    </span>
+                                                    <div className="flex items-center gap-2 max-w-md">
+                                                        <input
+                                                            type="url"
+                                                            value={question.videoUrl || ''}
+                                                            onChange={(e) => editQuestion(question.id, { videoUrl: e.target.value })}
+                                                            placeholder="https://youtube.com/watch?v=..."
+                                                            className="bg-[#1a1a1b] border border-[#27272a] rounded-md text-xs font-medium text-zinc-300 px-4 py-2.5 focus:ring-1 focus:ring-amber-500/50 outline-none placeholder:text-zinc-700 flex-1"
+                                                        />
+                                                        {question.videoUrl && (
+                                                            <a
+                                                                href={question.videoUrl}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="p-2 text-rose-400 hover:text-rose-300 hover:bg-rose-950/30 rounded-md transition-colors border border-transparent hover:border-rose-900/30"
+                                                                title="Watch video"
+                                                            >
+                                                                <ExternalLink size={16} />
+                                                            </a>
+                                                        )}
                                                     </div>
                                                 </div>
-                                            </section>
 
-                                            <section className="space-y-6 pt-10 border-t border-[#27272a]/40">
-                                                <h2 className="text-xl font-black tracking-tight text-white mb-6">Alternate Questions</h2>
-                                                <div className="space-y-3">
-                                                    {question.similarQuestions && question.similarQuestions.length > 0 ? (
-                                                        question.similarQuestions.map((qId) => {
-                                                            const similarQ = allQuestions[qId];
-                                                            if (!similarQ) return null;
-
-                                                            return (
-                                                                <div
-                                                                    key={qId}
-                                                                    onClick={() => setActiveQuestion(qId)}
-                                                                    className="flex items-center justify-between p-4 rounded-xl border border-[#27272a] bg-[#0c0c0e] hover:bg-[#111112] hover:border-zinc-700/50 transition-all cursor-pointer group shadow-sm active:scale-[0.98]"
-                                                                >
-                                                                    <div className="flex items-center gap-4">
-                                                                        <Circle
-                                                                            size={20}
-                                                                            className={cn(
-                                                                                "shrink-0",
-                                                                                similarQ.status === 'done' ? "text-emerald-500" : "text-zinc-700 group-hover:text-zinc-500"
-                                                                            )}
-                                                                            strokeWidth={similarQ.status === 'done' ? 3 : 2}
-                                                                        />
-                                                                        <div className="flex items-center gap-3">
-                                                                            <PlatformLogo platform={similarQ.platform} className="w-5 h-5 opacity-80" />
-                                                                            <span className="text-[15px] font-bold text-zinc-300 group-hover:text-white transition-colors">
-                                                                                {similarQ.title}
-                                                                            </span>
-                                                                        </div>
-                                                                    </div>
-                                                                    {similarQ.difficulty && (
-                                                                        <span className={cn(
-                                                                            "text-[11px] font-black px-3 py-1 rounded-md uppercase tracking-wider",
-                                                                            similarQ.difficulty === 'easy' ? "text-emerald-500" :
-                                                                                similarQ.difficulty === 'medium' ? "text-amber-500" : "text-rose-500"
-                                                                        )}>
-                                                                            {similarQ.difficulty}
-                                                                        </span>
-                                                                    )}
-                                                                </div>
-                                                            );
-                                                        })
-                                                    ) : (
-                                                        <div className="py-10 text-center border-2 border-dashed border-zinc-900 rounded-2xl bg-zinc-900/10">
-                                                            <p className="text-zinc-600 font-bold text-sm">No similar questions found.</p>
-                                                        </div>
-                                                    )}
+                                                <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-start gap-2 sm:gap-4">
+                                                    <span className="text-zinc-400 flex items-center gap-3 font-semibold pt-1">
+                                                        <List size={18} className="text-zinc-600" /> Topics:
+                                                    </span>
+                                                    <div className="flex flex-wrap gap-2">
+                                                        {(question.tags && question.tags.length > 0 ? question.tags : ['Arrays', 'Hashing']).map(tag => (
+                                                            <span key={tag} className="px-3 py-1.5 bg-[#1a1a1b] border border-[#27272a] rounded-md text-xs font-bold text-zinc-400 hover:border-zinc-700 transition-colors">
+                                                                {tag}
+                                                            </span>
+                                                        ))}
+                                                    </div>
                                                 </div>
-                                            </section>
-                                        </motion.div>
-                                    ) : (
-                                        <motion.div
-                                            initial={{ opacity: 0, scale: 0.98 }}
-                                            animate={{ opacity: 1, scale: 1 }}
-                                            className="flex flex-col space-y-4 min-h-[500px]"
-                                        >
-                                            <textarea
-                                                placeholder="Write your notes here..."
-                                                className="w-full flex-1 p-6 bg-[#111112] border border-[#27272a] rounded-xl text-zinc-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-600/30 resize-none transition-all placeholder:text-zinc-700"
-                                                value={question.notes || ''}
-                                                onChange={(e) => editQuestion(question.id, { notes: e.target.value })}
-                                            />
-                                            <div className="flex justify-end gap-2 text-[10px] font-bold text-zinc-700 uppercase tracking-widest">
-                                                <CheckCircle2 size={12} className="text-zinc-800" />
-                                                <span>Autosaved locally</span>
+
+                                                <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-start gap-2 sm:gap-4">
+                                                    <span className="text-zinc-400 flex items-center gap-3 font-semibold pt-1">
+                                                        <Layers size={18} className="text-zinc-600" /> Popular Sheets:
+                                                    </span>
+                                                    <div className="flex flex-wrap gap-2">
+                                                        {(question.popularSheets && question.popularSheets.length > 0 ? question.popularSheets : ["Striver's SDE Sheet", "Neetcode 150", "Blind 75"]).map(sheet => (
+                                                            <span key={sheet} className="px-3 py-1.5 bg-[#1a1a1b] border border-[#27272a] rounded-md text-xs font-bold text-zinc-400 hover:border-zinc-700 transition-colors">
+                                                                {sheet}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </motion.div>
-                                    )}
-                                </div>
+                                        </section>
+
+                                        <section className="space-y-4">
+                                            <h2 className="text-xl font-black tracking-tight text-white border-t border-[#27272a]/40 pt-8 mb-4 flex items-center gap-3">
+                                                Custom Details
+                                            </h2>
+                                            <div className="space-y-5 text-sm">
+                                                <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] items-start gap-2 sm:gap-4">
+                                                    <span className="text-zinc-400 font-bold pt-1">Additional Tags :</span>
+                                                    <div className="flex flex-wrap gap-2">
+                                                        {question.customTags?.map(tag => (
+                                                            <span key={tag} className="flex items-center gap-1.5 px-3 py-1 bg-amber-500/10 border border-amber-500/20 rounded-md text-xs font-bold text-amber-400 group/tag">
+                                                                {tag}
+                                                                <button
+                                                                    onClick={() => handleRemoveTag(tag)}
+                                                                    className="hover:text-rose-500 transition-colors opacity-0 group-hover/tag:opacity-100"
+                                                                >
+                                                                    <X size={12} />
+                                                                </button>
+                                                            </span>
+                                                        ))}
+                                                        {isAddingTag ? (
+                                                            <div className="flex items-center gap-2">
+                                                                <input
+                                                                    autoFocus
+                                                                    className="bg-[#1a1a1b] border border-amber-500/50 rounded-md text-[11px] font-bold text-zinc-100 px-2 py-1 focus:ring-1 focus:ring-amber-500 outline-none w-24"
+                                                                    value={tagInput}
+                                                                    onChange={(e) => setTagInput(e.target.value)}
+                                                                    onKeyDown={(e) => e.key === 'Enter' && handleAddTag()}
+                                                                    onBlur={() => !tagInput && setIsAddingTag(false)}
+                                                                />
+                                                                <button onClick={handleAddTag} className="text-emerald-500 hover:text-emerald-400">
+                                                                    <CheckCircle2 size={16} />
+                                                                </button>
+                                                                <button onClick={() => setIsAddingTag(false)} className="text-zinc-600 hover:text-zinc-400">
+                                                                    <X size={16} />
+                                                                </button>
+                                                            </div>
+                                                        ) : (
+                                                            <button
+                                                                onClick={() => setIsAddingTag(true)}
+                                                                className="flex items-center gap-1.5 px-3 py-1 bg-[#1a1a1b] border border-[#27272a] rounded-md text-xs font-bold text-zinc-500 hover:text-zinc-300 hover:border-zinc-700 transition-all border-dashed"
+                                                            >
+                                                                <Plus size={12} /> Add Tag
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <div className="grid grid-cols-[140px_1fr] items-start">
+                                                    <span className="text-zinc-400 font-bold pt-1">Custom Sheets :</span>
+                                                    <div className="flex flex-wrap gap-2">
+                                                        {question.customSheets?.map(sheet => (
+                                                            <span key={sheet} className="flex items-center gap-1.5 px-3 py-1 bg-indigo-500/10 border border-indigo-500/20 rounded-md text-xs font-bold text-indigo-400 group/sheet">
+                                                                {sheet}
+                                                                <button
+                                                                    onClick={() => handleRemoveSheet(sheet)}
+                                                                    className="hover:text-rose-500 transition-colors opacity-0 group-hover/sheet:opacity-100"
+                                                                >
+                                                                    <X size={12} />
+                                                                </button>
+                                                            </span>
+                                                        ))}
+                                                        {isAddingSheet ? (
+                                                            <div className="flex items-center gap-2">
+                                                                <input
+                                                                    autoFocus
+                                                                    className="bg-[#1a1a1b] border border-indigo-500/50 rounded-md text-[11px] font-bold text-zinc-100 px-2 py-1 focus:ring-1 focus:ring-indigo-500 outline-none w-32"
+                                                                    value={sheetInput}
+                                                                    onChange={(e) => setSheetInput(e.target.value)}
+                                                                    onKeyDown={(e) => e.key === 'Enter' && handleAddSheet()}
+                                                                    onBlur={() => !sheetInput && setIsAddingSheet(false)}
+                                                                />
+                                                                <button onClick={handleAddSheet} className="text-emerald-500 hover:text-emerald-400">
+                                                                    <CheckCircle2 size={16} />
+                                                                </button>
+                                                                <button onClick={() => setIsAddingSheet(false)} className="text-zinc-600 hover:text-zinc-400">
+                                                                    <X size={16} />
+                                                                </button>
+                                                            </div>
+                                                        ) : (
+                                                            <button
+                                                                onClick={() => setIsAddingSheet(true)}
+                                                                className="flex items-center gap-1.5 px-3 py-1 bg-[#1a1a1b] border border-[#27272a] rounded-md text-xs font-bold text-zinc-500 hover:text-zinc-300 hover:border-zinc-700 transition-all border-dashed"
+                                                            >
+                                                                <Plus size={12} /> Add to Sheet
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </section>
+
+                                        <section className="space-y-6 pt-10 border-t border-[#27272a]/40">
+                                            <h2 className="text-xl font-black tracking-tight text-white mb-6">Alternate Questions</h2>
+                                            <div className="space-y-3">
+                                                {question.similarQuestions && question.similarQuestions.length > 0 ? (
+                                                    question.similarQuestions.map((qId) => {
+                                                        const similarQ = allQuestions[qId];
+                                                        if (!similarQ) return null;
+
+                                                        return (
+                                                            <div
+                                                                key={qId}
+                                                                onClick={() => setActiveQuestion(qId)}
+                                                                className="flex items-center justify-between p-4 rounded-xl border border-[#27272a] bg-[#0c0c0e] hover:bg-[#111112] hover:border-zinc-700/50 transition-all cursor-pointer group shadow-sm active:scale-[0.98]"
+                                                            >
+                                                                <div className="flex items-center gap-4">
+                                                                    <Circle
+                                                                        size={20}
+                                                                        className={cn(
+                                                                            "shrink-0",
+                                                                            similarQ.status === 'done' ? "text-emerald-500" : "text-zinc-700 group-hover:text-zinc-500"
+                                                                        )}
+                                                                        strokeWidth={similarQ.status === 'done' ? 3 : 2}
+                                                                    />
+                                                                    <div className="flex items-center gap-3">
+                                                                        <PlatformLogo platform={similarQ.platform} className="w-5 h-5 opacity-80" />
+                                                                        <span className="text-[15px] font-bold text-zinc-300 group-hover:text-white transition-colors">
+                                                                            {similarQ.title}
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                                {similarQ.difficulty && (
+                                                                    <span className={cn(
+                                                                        "text-[11px] font-black px-3 py-1 rounded-md uppercase tracking-wider",
+                                                                        similarQ.difficulty === 'easy' ? "text-emerald-500" :
+                                                                            similarQ.difficulty === 'medium' ? "text-amber-500" : "text-rose-500"
+                                                                    )}>
+                                                                        {similarQ.difficulty}
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                        );
+                                                    })
+                                                ) : (
+                                                    <div className="py-10 text-center border-2 border-dashed border-zinc-900 rounded-2xl bg-zinc-900/10">
+                                                        <p className="text-zinc-600 font-bold text-sm">No similar questions found.</p>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </section>
+                                    </motion.div>
+                                ) : (
+                                    <motion.div
+                                        initial={{ opacity: 0, scale: 0.98 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        className="flex flex-col space-y-4 h-full min-h-[400px]"
+                                    >
+                                        <textarea
+                                            placeholder="Write your notes here..."
+                                            className="w-full flex-1 p-6 bg-[#111112] border border-[#27272a] rounded-xl text-zinc-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-600/30 resize-none transition-all placeholder:text-zinc-700"
+                                            value={question.notes || ''}
+                                            onChange={(e) => editQuestion(question.id, { notes: e.target.value })}
+                                        />
+                                        <div className="flex justify-end gap-2 text-[10px] font-bold text-zinc-700 uppercase tracking-widest">
+                                            <CheckCircle2 size={12} className="text-zinc-800" />
+                                            <span>Autosaved locally</span>
+                                        </div>
+                                    </motion.div>
+                                )}
                             </div>
                         </div>
                     </motion.div>
@@ -628,4 +633,4 @@ export function QuestionDetailPanel() {
             )}
         </AnimatePresence>
     );
-}
+};
