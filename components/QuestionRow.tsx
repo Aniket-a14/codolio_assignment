@@ -116,8 +116,10 @@ export function QuestionRow({ id, dragHandleProps, searchQuery = '' }: QuestionR
             </button>
 
             <div
-                {...dragHandleProps}
+                {...dragHandleProps?.attributes}
+                {...dragHandleProps?.listeners}
                 className="mr-3 text-zinc-800 hover:text-zinc-600 cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 transition-opacity shrink-0 z-10"
+                style={{ touchAction: 'none' }}
             >
                 <GripVertical size={13} strokeWidth={2} />
             </div>
@@ -136,7 +138,12 @@ export function QuestionRow({ id, dragHandleProps, searchQuery = '' }: QuestionR
                 ) : (
                     <div className="flex items-center gap-2 min-w-0">
                         <span
-                            onClick={() => setActiveQuestion(id)}
+                            onClick={() => {
+                                setActiveQuestion(id);
+                                if (question.link) {
+                                    window.open(question.link, '_blank', 'noopener,noreferrer');
+                                }
+                            }}
                             onDoubleClick={(e) => { e.stopPropagation(); setIsEditing(true); }}
                             className={cn(
                                 "text-[15px] font-semibold tracking-tight cursor-pointer block truncate transition-colors",

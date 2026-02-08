@@ -136,8 +136,10 @@ export function TopicItem({ id, dragHandleProps, searchQuery = '', filters = { s
             >
                 <div className="flex items-center gap-4">
                     <div
-                        {...dragHandleProps}
+                        {...dragHandleProps?.attributes}
+                        {...dragHandleProps?.listeners}
                         className="text-zinc-700 hover:text-zinc-500 cursor-grab active:cursor-grabbing opacity-0 group-hover/row:opacity-100 transition-opacity"
+                        style={{ touchAction: 'none' }}
                         onClick={(e) => e.stopPropagation()}
                     >
                         <GripVertical size={14} strokeWidth={2} />

@@ -152,8 +152,10 @@ export function SubTopicItem({ id, dragHandleProps, searchQuery = '', filters = 
 
                 <div className="flex items-center gap-3 opacity-0 group-hover/sub:opacity-100 transition-opacity">
                     <div
-                        {...dragHandleProps}
+                        {...dragHandleProps?.attributes}
+                        {...dragHandleProps?.listeners}
                         className="text-zinc-900 hover:text-zinc-700 cursor-grab active:cursor-grabbing mr-2"
+                        style={{ touchAction: 'none' }}
                         onClick={(e) => e.stopPropagation()}
                     >
                         <GripVertical size={14} strokeWidth={2} />
@@ -174,7 +176,7 @@ export function SubTopicItem({ id, dragHandleProps, searchQuery = '', filters = 
                     </button>
                 </div>
             </div>
-            
+
             <AnimatePresence>
                 {expandedState && (
                     <motion.div

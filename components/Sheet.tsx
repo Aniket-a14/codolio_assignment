@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useCallback } from 'react';
 import {
     DndContext,
     closestCenter,
     KeyboardSensor,
-    PointerSensor,
+    MouseSensor,
+    TouchSensor,
     useSensor,
     useSensors,
     DragEndEvent
@@ -42,6 +43,20 @@ import { FilterPopover } from './FilterPopover';
 import { exportToJSON, exportToCSV } from '../lib/exportUtils';
 import { StatsPanel } from './StatsPanel';
 
+const SENSOR_OPTIONS = {
+    mouse: {
+        activationConstraint: {
+            distance: 5,
+        },
+    },
+    touch: {
+        activationConstraint: {
+            delay: 250,
+            tolerance: 5,
+        },
+    },
+};
+
 export default function Sheet() {
     const questions = useStore((state) => state.questions);
     const {
@@ -64,12 +79,12 @@ export default function Sheet() {
     const sheetTitle = metadata?.title || "Striver SDE Sheet";
     const sheetDesc = metadata?.description || "The definitive roadmap for SDE roles. Curated problems, detailed patterns, and a disciplined focus environment.";
 
-    const sensors = useSensors(
-        useSensor(PointerSensor),
-        useSensor(KeyboardSensor, {
-            coordinateGetter: sortableKeyboardCoordinates,
-        })
-    );
+    const mouseSensor = useSensor(MouseSensor, SENSOR_OPTIONS.mouse);
+    const touchSensor = useSensor(TouchSensor, SENSOR_OPTIONS.touch);
+    const keyboardSensor = useSensor(KeyboardSensor, {
+        coordinateGetter: sortableKeyboardCoordinates,
+    });
+    const sensors = useSensors(mouseSensor, touchSensor, keyboardSensor);
 
     const [isFollowing, setIsFollowing] = React.useState(false);
     const [activeTab, setActiveTab] = React.useState('Problem List');
@@ -151,7 +166,7 @@ export default function Sheet() {
         return topics;
     }, [topics, isFiltering]);
 
-    const handleDragEnd = (event: DragEndEvent) => {
+    const handleDragEnd = useCallback((event: DragEndEvent) => {
         const { active, over } = event;
         if (!over) return;
 
@@ -224,7 +239,7 @@ export default function Sheet() {
                 }
             }
         }
-    };
+    }, [topics, subTopics, questions, reorderEntity]);
 
     const handleCreateTopic = () => {
         addTopic("New Topic");
@@ -449,6 +464,7 @@ export default function Sheet() {
                 ) : (
                     <div className="flex flex-col gap-6">
                         <DndContext
+                            id="main-sheet-dnd"
                             sensors={sensors}
                             collisionDetection={closestCenter}
                             onDragEnd={handleDragEnd}
